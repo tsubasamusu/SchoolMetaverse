@@ -59,24 +59,5 @@ namespace SchoolMetaverse
                 isConnecting = false;
             }
         }
-
-        /// <summary>
-        /// ゲームサーバーへの接続が成功した際に呼び出される
-        /// </summary>
-        public override void OnJoinedRoom()
-        {
-            //プレイヤーのゲームオブジェクトを生成する
-            GameObject objPlayer =
-                PhotonNetwork.Instantiate(GameData.instance.ObjPlayerPrefab.name, GameData.instance.SpawnTran.position, Quaternion.identity);
-
-            //カメラを取得する
-            CameraController camera = objPlayer.transform.GetChild(2).GetComponent<CameraController>();
-
-            //カメラの初期設定を行う
-            camera.SetUp();
-
-            //生成したオブジェクトの初期設定を行う
-            objPlayer.GetComponent<PlayerController>().SetUp(camera.transform);
-        }
     }
 }

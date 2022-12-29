@@ -7,7 +7,7 @@ using UniRx.Triggers;
 
 namespace SchoolMetaverse
 {
-    public class CameraController : MonoBehaviourPunCallbacks
+    public class CameraController : MonoBehaviourPunCallbacks,ISetUp
     {
         /// <summary>
         /// ƒJƒƒ‰‚Ì‰Šúİ’è‚ğs‚¤
