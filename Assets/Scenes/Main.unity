@@ -216,6 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnTran: {fileID: 1160912645}
   objPlayerPrefab: {fileID: 4152327719887516443, guid: caf127ae0e0355d4cb869f3ab9beee1c, type: 3}
+  playerAnimatorController: {fileID: 9100000, guid: 646e188d98fc45046b3d3694c3dd3c01, type: 2}
 --- !u!23 &40374663
 MeshRenderer:
   m_ObjectHideFlags: 0

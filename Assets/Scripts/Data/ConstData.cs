@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -13,5 +11,13 @@ namespace SchoolMetaverse
         public const float LOOK_SMOOTH = 0.1f;//視点の滑らかさ 
 
         public const float MOVE_SPEED = 0.5f;//移動速度
+
+        public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
+
+        public const KeyCode WALK_R_KEY = KeyCode.RightArrow;//右へ進むキー
+
+        public const KeyCode WALK_B_KEY = KeyCode.DownArrow;//後ろへ進むキー
+
+        public const KeyCode WALK_L_KEY = KeyCode.LeftArrow;//左へ進むキー
     }
 }
