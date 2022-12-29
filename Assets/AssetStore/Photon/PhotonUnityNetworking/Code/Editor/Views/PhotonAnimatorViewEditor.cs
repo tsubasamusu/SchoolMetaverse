@@ -165,7 +165,7 @@ namespace Photon.Pun
                 string parameterName = syncedParams[i].Name;
                 if (this.DoesParameterExist(parameterName) == false)
                 {
-                    Debug.LogWarning("Parameter '" + this.m_Target.GetSynchronizedParameters()[i].Name + "' doesn't exist anymore. Removing it from the list of synchronized parameters");
+                    //Debug.LogWarning("Parameter '" + this.m_Target.GetSynchronizedParameters()[i].Name + "' doesn't exist anymore. Removing it from the list of synchronized parameters");
                     paramsToRemove.Add(parameterName);
                 }
             }

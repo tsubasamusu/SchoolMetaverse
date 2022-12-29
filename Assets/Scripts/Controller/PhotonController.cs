@@ -8,9 +8,6 @@ namespace SchoolMetaverse
 {
     public class PhotonController : MonoBehaviourPunCallbacks,ISetUp
     {
-        [SerializeField]
-        private GameObject objPlayerPrefab;//プレイヤーのオブジェクトのプレファブ
-
         private bool isConnecting;//マスターサーバーに接続しているかどうか
 
         /// <summary>
@@ -68,7 +65,9 @@ namespace SchoolMetaverse
         /// </summary>
         public override void OnJoinedRoom()
         {
-            //TODO:ゲームサーバーへの接続が成功した際の処理
+            //プレイヤーのゲームオブジェクトを生成する
+            GameObject objPlayer=
+                PhotonNetwork.Instantiate(GameData.instance.ObjPlayerPrefab.name, GameData.instance.SpawnTran.position, Quaternion.identity);
         }
     }
 }

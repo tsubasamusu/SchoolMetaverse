@@ -64,10 +64,11 @@ namespace UnityChan
 			orgColHight = col.height;
 			orgVectColCenter = col.center;
 		}
-	
-	
-		// 以下、メイン処理.リジッドボディと絡めるので、FixedUpdate内で処理を行う.
-		void FixedUpdate ()
+
+
+        // 以下、メイン処理.リジッドボディと絡めるので、FixedUpdate内で処理を行う.
+        [System.Obsolete]
+        void FixedUpdate ()
 		{
 			float h = Input.GetAxis ("Horizontal");				// 入力デバイスの水平軸をhで定義
 			float v = Input.GetAxis ("Vertical");				// 入力デバイスの垂直軸をvで定義
@@ -90,19 +91,6 @@ namespace UnityChan
 				velocity *= backwardSpeed;	// 移動速度を掛ける
 			}
 		
-			if (Input.GetButtonDown ("Jump")) {	// スペースキーを入力したら
-
-				//アニメーションのステートがLocomotionの最中のみジャンプできる
-				if (currentBaseState.nameHash == locoState) {
-					//ステート遷移中でなかったらジャンプできる
-					if (!anim.IsInTransition (0)) {
-						rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
-						anim.SetBool ("Jump", true);		// Animatorにジャンプに切り替えるフラグを送る
-					}
-				}
-			}
-		
-
 			// 上下のキー入力でキャラクターを移動させる
 			transform.localPosition += velocity * Time.fixedDeltaTime;
 

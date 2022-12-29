@@ -9,10 +9,18 @@ namespace SchoolMetaverse
         [SerializeField]
         private Transform spawnTran;//スポーン地点
 
+        [SerializeField]
+        private GameObject objPlayerPrefab;//プレイヤーのプレファブ
+
         /// <summary>
         /// 「スポーン地点」の取得用
         /// </summary>
         public Transform SpawnTran { get => spawnTran; }
+
+        /// <summary>
+        /// 「プレイヤーのプレファブ」の取得用
+        /// </summary>
+        public GameObject ObjPlayerPrefab { get => objPlayerPrefab; }
 
         public static GameData instance;//インスタンス 
 
