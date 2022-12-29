@@ -63,11 +63,16 @@ namespace SchoolMetaverse
         /// <summary>
         /// ゲームサーバーへの接続が成功した際に呼び出される
         /// </summary>
+        [System.Obsolete]
         public override void OnJoinedRoom()
         {
             //プレイヤーのゲームオブジェクトを生成する
             GameObject objPlayer=
                 PhotonNetwork.Instantiate(GameData.instance.ObjPlayerPrefab.name, GameData.instance.SpawnTran.position, Quaternion.identity);
+
+            //生成したオブジェクトの初期設定を行う
+            objPlayer.GetComponent<PlayerController>().SetUp();
+            objPlayer.transform.GetChild(2).GetComponent<CameraController>().SetUp();
         }
     }
 }
