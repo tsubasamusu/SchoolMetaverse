@@ -12,6 +12,8 @@ namespace SchoolMetaverse
 
         public const float MOVE_SPEED = 0.5f;//移動速度
 
+        public const float MAX_CAMERA_ANGLE_X = 40f;//カメラの最大角度x
+
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
 
         public const KeyCode WALK_R_KEY = KeyCode.RightArrow;//右へ進むキー

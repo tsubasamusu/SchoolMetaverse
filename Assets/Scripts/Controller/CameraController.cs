@@ -41,8 +41,11 @@ namespace SchoolMetaverse
                     currentXRot = Mathf.SmoothDamp(currentXRot, xRot, ref xRotVelocity, ConstData.LOOK_SMOOTH);
                     currentYRot = Mathf.SmoothDamp(currentYRot, yRot, ref yRotVelocity, ConstData.LOOK_SMOOTH);
 
+                    //éÊìæÇµÇΩäpìxxÇ…êßå¿Çâ¡Ç¶ÇÈ
+                    currentXRot = Mathf.Clamp(currentXRot, -ConstData.MAX_CAMERA_ANGLE_X, ConstData.MAX_CAMERA_ANGLE_X);
+
                     //ÉJÉÅÉâÇâÒì]Ç≥ÇπÇÈ
-                    transform.rotation = Quaternion.Euler(currentXRot, currentYRot, 0);
+                    transform.eulerAngles = new(currentXRot, currentYRot, 0);
                 })
                 .AddTo(this);
         }
