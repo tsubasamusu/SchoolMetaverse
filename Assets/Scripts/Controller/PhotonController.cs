@@ -6,7 +6,7 @@ using Photon.Realtime;
 
 namespace SchoolMetaverse
 {
-    public class PhotonController : MonoBehaviourPunCallbacks,ISetUp
+    public class PhotonController : MonoBehaviourPunCallbacks, ISetUp
     {
         private bool isConnecting;//マスターサーバーに接続しているかどうか
 
@@ -23,7 +23,7 @@ namespace SchoolMetaverse
         /// PhotonControllerの初期設定を行う
         /// </summary>
         public void SetUp()
-        { 
+        {
             //マスターサーバーに接続したなら
             if (PhotonNetwork.IsConnected)
             {
@@ -63,16 +63,20 @@ namespace SchoolMetaverse
         /// <summary>
         /// ゲームサーバーへの接続が成功した際に呼び出される
         /// </summary>
-        [System.Obsolete]
         public override void OnJoinedRoom()
         {
             //プレイヤーのゲームオブジェクトを生成する
-            GameObject objPlayer=
+            GameObject objPlayer =
                 PhotonNetwork.Instantiate(GameData.instance.ObjPlayerPrefab.name, GameData.instance.SpawnTran.position, Quaternion.identity);
 
+            //カメラを取得する
+            CameraController camera = objPlayer.transform.GetChild(2).GetComponent<CameraController>();
+
+            //カメラの初期設定を行う
+            camera.SetUp();
+
             //生成したオブジェクトの初期設定を行う
-            objPlayer.GetComponent<PlayerController>().SetUp();
-            objPlayer.transform.GetChild(2).GetComponent<CameraController>().SetUp();
+            objPlayer.GetComponent<PlayerController>().SetUp(camera.transform);
         }
     }
 }
