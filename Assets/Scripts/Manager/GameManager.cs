@@ -21,7 +21,7 @@ namespace SchoolMetaverse
         {
             //プレイヤーのゲームオブジェクトを生成する
             GameObject objPlayer =
-                PhotonNetwork.Instantiate(GameData.instance.ObjPlayerPrefab.name, GameData.instance.SpawnTran.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("Player", new Vector3(2f,0f,-5f), Quaternion.identity);
 
             //生成したオブジェクトの初期設定を行う
             objPlayer.GetComponent<PlayerController>().SetUp();

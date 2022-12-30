@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using UniRx;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace SchoolMetaverse
 {
@@ -12,25 +11,10 @@ namespace SchoolMetaverse
     public class UIManagerBeforeJoinRoom : MonoBehaviour
     {
         [SerializeField]
-        private Image imgBackground;//背景のイメージ
-
-        [SerializeField]
-        private Image imgBtnMain;//メインボタンのイメージ
-
-        [SerializeField]
-        private Image imgBtnSub;//サブボタンのイメージ
-
-        [SerializeField]
         private Text txtPlaceholder;//スペースホルダのテキスト
 
         [SerializeField]
         private Text txtPlayerEntered;//プレイヤーが入力したテキスト
-
-        [SerializeField]
-        private Text txtBtnMain;//メインボタンのテキスト
-
-        [SerializeField]
-        private Text txtBtnSub;//サブボタンのテキスト
 
         [SerializeField]
         private Button btnMain;//メインボタン
@@ -46,13 +30,8 @@ namespace SchoolMetaverse
         /// </summary>
         private void Start()
         {
-            //背景を黒色に設定する
-            imgBackground.color = Color.black;
-
-            //各テキストを設定する
+            //スペースホルダのテキストを設定する
             txtPlaceholder.text = "パスコードを入力...";
-            txtBtnMain.text = "完了";
-            txtBtnSub.text = "スキップ";
 
             //SingleAssignmentDisposableを作成する
             var disposable = new SingleAssignmentDisposable();
@@ -71,11 +50,7 @@ namespace SchoolMetaverse
 
             //サブボタンを押された際の処理
             btnSub.OnClickAsObservable()
-                .Subscribe(_ =>
-                {
-                    //名前を入力する場面に移る
-                    GoToEnterNameScene();
-                })
+                .Subscribe(_ =>GoToEnterNameScene())
                 .AddTo(btnSub);
 
             //名前を入力する場面に移る
@@ -84,11 +59,33 @@ namespace SchoolMetaverse
                 //サブボタンを消す
                 Destroy(btnSub.gameObject);
 
-                //プレイヤーが入力したテキストを空にする
-                inputField.text=string.Empty;
+                //プレイヤーが入力したテキストを初期化する
+                inputField.text=GameData.instance.playerName;
 
                 //テキストを変更する
                 txtPlaceholder.text = "名前を入力...";
+
+                //メインボタンが押された際の処理
+                btnMain.OnClickAsObservable()
+                    .Where(_=>txtPlayerEntered.text!=string.Empty)
+                    .Subscribe(_ =>
+                    {
+                        //プレイヤーの名前を取得する
+                        GameData.instance.playerName = txtPlayerEntered.text;
+
+                        //プレイヤーの名前をデバイスに保存する
+                        GameData.instance.SetDevicePlayerName();
+
+                        //InputFieldを消す
+                        Destroy(inputField.gameObject);
+
+                        //メインボタンを消す
+                        Destroy(btnMain.gameObject);
+
+                        //メインシーンを読み込む
+                        SceneManager.LoadScene("Main");
+                    })
+                    .AddTo(btnMain);
             }
         }
     }
