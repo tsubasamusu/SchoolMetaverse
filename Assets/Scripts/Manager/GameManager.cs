@@ -9,6 +9,9 @@ namespace SchoolMetaverse
     public class GameManager : MonoBehaviour
     {
         [SerializeField]
+        private SpawnTranDetail spawnTranDetail;//SpawnTranDetail
+
+        [SerializeField]
         private PictureManager pictureManager;//PictureManager
 
         [SerializeField]
@@ -21,10 +24,16 @@ namespace SchoolMetaverse
         {
             //プレイヤーのゲームオブジェクトを生成する
             GameObject objPlayer =
-                PhotonNetwork.Instantiate("Player", new Vector3(2f,0f,-5f), Quaternion.identity);
+                PhotonNetwork.Instantiate("Player", spawnTranDetail.transform.position, Quaternion.identity);
+
+            //PlayerControllerを取得する
+            PlayerController playerController=objPlayer.GetComponent<PlayerController>();
+
+            //リストに加える
+            GameData.instance.playerControllers.Add(playerController);
 
             //生成したオブジェクトの初期設定を行う
-            objPlayer.GetComponent<PlayerController>().SetUp();
+            playerController.SetUp();
 
             //カメラの親を設定する
             Camera.main.transform.SetParent(objPlayer.transform);

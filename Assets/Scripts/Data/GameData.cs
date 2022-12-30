@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -6,6 +7,9 @@ namespace SchoolMetaverse
     {
         [HideInInspector]
         public string playerName;//プレイヤーの名前
+
+        [HideInInspector]
+        public List<PlayerController> playerControllers = new();//プレイヤーのリスト
 
         public static GameData instance;//インスタンス
 
@@ -31,6 +35,7 @@ namespace SchoolMetaverse
         /// </summary>
         private void Start()
         {
+            //プレイヤーの名前が既に保存されているなら、それを取得する
             if (PlayerPrefs.HasKey("PlayerName")) playerName = PlayerPrefs.GetString("PlayerName");
         }
 
