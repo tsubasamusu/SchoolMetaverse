@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 namespace SchoolMetaverse
 {
-    public class GameData : MonoBehaviour
+    [RequireComponent(typeof(PhotonView))]
+    public class GameData : MonoBehaviour, IPunObservable
     {
         [HideInInspector]
         public string playerName;//プレイヤーの名前
 
-        [HideInInspector]
-        public List<PlayerController> playerControllers = new();//プレイヤーのリスト
-
         public static GameData instance;//インスタンス
+
+        private PhotonView photonView;//PhotonView
 
         /// <summary> 
         /// Startメソッドより前に呼び出される 
@@ -37,6 +38,12 @@ namespace SchoolMetaverse
         {
             //プレイヤーの名前が既に保存されているなら、それを取得する
             if (PlayerPrefs.HasKey("PlayerName")) playerName = PlayerPrefs.GetString("PlayerName");
+
+            //PhotonViewを取得する
+            photonView = GetComponent<PhotonView>();
+
+            //Requestに変更する
+            photonView.OwnershipTransfer = OwnershipOption.Request;
         }
 
         /// <summary>
@@ -47,5 +54,27 @@ namespace SchoolMetaverse
             //プレイヤーの名前を保存する
             PlayerPrefs.SetString("PlayerName", playerName);
         }
+
+        /// <summary>
+        /// 同期する
+        /// </summary>
+        /// <param name="stream">PhotonStream</param>
+        /// <param name="info">PhotonMessageInfo</param>
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                //stream.SendNext(playerControllers);
+            }
+            else
+            {
+                //playerControllers = (PlayerController[])stream.ReceiveNext();
+            }
+        }
+
+        /// <summary>
+        /// 所有権を要請する
+        /// </summary>
+        public void RequestOwnership() { photonView.RequestOwnership(); }
     }
 }

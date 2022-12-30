@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using TNRD;
 using UniRx;
@@ -29,8 +30,8 @@ namespace SchoolMetaverse
             //PlayerControllerを取得する
             PlayerController playerController=objPlayer.GetComponent<PlayerController>();
 
-            //リストに加える
-            GameData.instance.playerControllers.Add(playerController);
+            //所有権を要請する
+            GameData.instance.RequestOwnership();
 
             //生成したオブジェクトの初期設定を行う
             playerController.SetUp();
