@@ -14,7 +14,9 @@ namespace SchoolMetaverse
 
         public const float MAX_CAMERA_ANGLE_X = 40f;//カメラの最大角度x
 
-        public const float CAMERA_HEIGHT = 1.4f;//カメラの高さ
+        public const float CAMERA_HEIGHT = 1.3f;//カメラの高さ
+
+        public const float MINI_POS_Z = -4f;//プレイヤーが居ても良い座標zの最小値
 
         public const string PASSCODE = "0308";//パスコード
 
