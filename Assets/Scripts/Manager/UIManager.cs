@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 namespace SchoolMetaverse
 {
@@ -48,7 +49,10 @@ namespace SchoolMetaverse
             //背景を黒色に設定する
             imgBackground.color=Color.black;
 
-
+            //各テキストを設定する
+            txtPlaceholder.text = "Enter Passcode";
+            txtBtnMain.text = "Complete";
+            txtBtnSub.text = "Skip";
         }
     }
 }

@@ -16,6 +16,8 @@ namespace SchoolMetaverse
 
         public const float CAMERA_HEIGHT = 1.4f;//カメラの高さ
 
+        public const string PASSCODE = "0308";//パスコード
+
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
 
         public const KeyCode WALK_R_KEY = KeyCode.RightArrow;//右へ進むキー
