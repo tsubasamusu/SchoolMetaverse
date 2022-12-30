@@ -13,6 +13,33 @@ namespace SchoolMetaverse
         [SerializeField]
         private Image imgBackground;//背景のイメージ
 
+        [SerializeField]
+        private Image imgBtnMain;//メインボタンのイメージ
+
+        [SerializeField]
+        private Image imgBtnSub;//サブボタンのイメージ
+
+        [SerializeField]
+        private Text txtPlaceholder;//スペースホルダのテキスト
+
+        [SerializeField]
+        private Text txtPlayerEntered;//プレイヤーが入力したテキスト
+
+        [SerializeField]
+        private Text txtBtnMain;//メインボタンのテキスト
+
+        [SerializeField]
+        private Text txtBtnSub;//サブボタンのテキスト
+
+        [SerializeField]
+        private Button btnMain;//メインボタン
+
+        [SerializeField]
+        private Button btnSub;//サブボタン
+
+        [SerializeField]
+        private InputField inputField;//InputField
+
         /// <summary>
         /// UIManagerの初期設定を行う
         /// </summary>
