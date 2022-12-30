@@ -18,6 +18,9 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
+            //”wŒi‚ğ•F‚Éİ’è‚·‚é
+            imgBackground.color=Color.black;
+
 
         }
     }
