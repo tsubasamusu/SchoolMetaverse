@@ -1,7 +1,6 @@
 using System;
 using System.Windows.Forms;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SchoolMetaverse
 {
@@ -46,7 +45,7 @@ namespace SchoolMetaverse
                 FilterIndex = 1,
 
                 //タイトルを設定する
-                Title = "画像ファイル指定",
+                Title = "画像を選択",
 
                 //カレントディレクトリを復元する
                 RestoreDirectory = true        

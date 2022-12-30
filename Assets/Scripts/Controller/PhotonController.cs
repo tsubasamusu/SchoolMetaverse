@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UniRx;
 
 namespace SchoolMetaverse
 {
     public class PhotonController : MonoBehaviourPunCallbacks, ISetUp
     {
         private bool isConnecting;//マスターサーバーに接続しているかどうか
+
+        public ReactiveProperty<bool> JoinedRoom = new(false);//ルームに参加したかどうか
 
         /// <summary>
         /// Startメソッドより前に呼び出される
@@ -58,6 +58,15 @@ namespace SchoolMetaverse
                 //マスターサーバーに接続していない状態に切り替える
                 isConnecting = false;
             }
+        }
+
+        /// <summary>
+        /// ゲームサーバーへの接続が成功した際に呼び出される
+        /// </summary>
+        public override void OnJoinedRoom()
+        {
+            //ルームに参加した状態に切り替える
+            JoinedRoom.Value= true;
         }
     }
 }
