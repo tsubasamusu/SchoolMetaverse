@@ -8,6 +8,9 @@ namespace SchoolMetaverse
     public class GameManager : MonoBehaviourPunCallbacks
     {
         [SerializeField]
+        private PictureManager pictureManager;//PictureManager
+
+        [SerializeField]
         private List<SerializableInterface<ISetUp>> setUpBeforeJoinRoomList = new();//初期設定用インターフェイスのリスト（ルーム参加前）
 
         [SerializeField]

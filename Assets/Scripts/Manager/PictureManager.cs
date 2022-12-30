@@ -10,19 +10,17 @@ namespace SchoolMetaverse
     /// </summary>
     public class PictureManager : MonoBehaviour
     {
-        [SerializeField]
-        private Text txtFileName;//ファイル名のテキスト
-
         /// <summary>
-        /// ダイアログを開く
+        /// ダイアログを用いてファイル名を取得する
         /// </summary>
-        public void OpenDialog()
+        /// <returns>ファイル名</returns>
+        private string GetFileNameByDialog()
         {
             //ファイル名の保持用
-            string file = string.Empty;
+            string fileName = string.Empty;
 
-            //画像ファイルを開くダイアログを呼び出し、ファイル名を取得する
-            if (SaveImgFileDialog(ref file) == true) txtFileName.text = file;
+            //ファイル名を返す
+            return OpenDialog(ref fileName) ? fileName : string.Empty;
         }
 
         /// <summary>
@@ -30,7 +28,7 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="fileName">ファイル名</param>
         /// <returns>結果</returns>
-        private bool SaveImgFileDialog(ref string fileName)
+        private bool OpenDialog(ref string fileName)
         {
             //ダイアログを作成する
             SaveFileDialog dlg = new()
