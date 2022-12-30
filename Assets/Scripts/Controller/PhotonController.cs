@@ -1,14 +1,20 @@
 using Photon.Pun;
 using Photon.Realtime;
-using UniRx;
+using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace SchoolMetaverse
 {
-    public class PhotonController : MonoBehaviourPunCallbacks, ISetUp
+    public class PhotonController : MonoBehaviourPunCallbacks
     {
         private bool isConnecting;//マスターサーバーに接続しているかどうか
 
-        public ReactiveProperty<bool> JoinedRoom = new(false);//ルームに参加したかどうか
+        private bool joinedRoom;//ルームに参加したかどうか
+
+        /// <summary>
+        /// 「ルームに参加したかどうか」の取得用
+        /// </summary>
+        public bool JoinedRoom { get => joinedRoom; }
 
         /// <summary>
         /// Startメソッドより前に呼び出される
@@ -20,9 +26,9 @@ namespace SchoolMetaverse
         }
 
         /// <summary>
-        /// PhotonControllerの初期設定を行う
+        /// ゲーム開始直以後に呼び出される
         /// </summary>
-        public void SetUp()
+        private void Start()
         {
             //マスターサーバーに接続したなら
             if (PhotonNetwork.IsConnected)
@@ -66,7 +72,7 @@ namespace SchoolMetaverse
         public override void OnJoinedRoom()
         {
             //ルームに参加した状態に切り替える
-            JoinedRoom.Value= true;
+            joinedRoom= true;
         }
     }
 }
