@@ -1,26 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
-using Unity.VisualScripting;
-using UniRx.Triggers;
 using Photon.Pun;
+using UnityEngine;
 
 namespace SchoolMetaverse
 {
     /// <summary>
     /// スポーン地点に関する処理を行う
     /// </summary>
-    public class SpawnTranDetail : MonoBehaviour, ISetUp
+    public class SpawnTranDetail : MonoBehaviour
     {
-        /// <summary>
-        /// SpawnTranDetailの初期設定を行う
-        /// </summary>
-        public void SetUp()
-        {
-
-        }
-
         /// <summary>
         /// スポーン可能かどうか調べる
         /// </summary>

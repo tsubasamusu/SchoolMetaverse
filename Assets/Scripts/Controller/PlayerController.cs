@@ -14,14 +14,8 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
-            //Hashtableを作成する
-            var hashtable = new ExitGames.Client.Photon.Hashtable { ["PlayerController"] = this };
-
-            ////カスタムプロパティを設定する
-            //PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
-
-            ////所有者が自分ではないなら、以降の処理を行わない
-            //if (!photonView.IsMine) return;
+            //所有者が自分ではないなら、以降の処理を行わない
+            if (!photonView.IsMine) return;
 
             //CharacterControllerを取得する
             CharacterController characterController = GetComponent<CharacterController>();
