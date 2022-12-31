@@ -848,6 +848,7 @@ MonoBehaviour:
   btnMain: {fileID: 20053205}
   btnSub: {fileID: 163218192}
   inputField: {fileID: 1002431353}
+  photonController: {fileID: 1909349458}
 --- !u!4 &939164905
 Transform:
   m_ObjectHideFlags: 0

@@ -72,7 +72,7 @@ namespace SchoolMetaverse
         public override void OnJoinedRoom()
         {
             //ƒ‹[ƒ€‚ÉQ‰Á‚µ‚½ó‘Ô‚ÉØ‚è‘Ö‚¦‚é
-            joinedRoom= true;
+            joinedRoom = true;
         }
     }
 }

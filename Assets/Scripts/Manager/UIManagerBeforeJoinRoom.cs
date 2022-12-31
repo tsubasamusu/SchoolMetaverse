@@ -1,3 +1,4 @@
+using System.Collections;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,9 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private InputField inputField;//InputField
+
+        [SerializeField]
+        private PhotonController photonController;
 
         /// <summary>
         /// ゲーム開始直後に呼び出される
@@ -82,10 +86,20 @@ namespace SchoolMetaverse
                         //メインボタンを消す
                         Destroy(btnMain.gameObject);
 
-                        //メインシーンを読み込む
-                        SceneManager.LoadScene("Main");
+                        //メインシーンに移る
+                        StartCoroutine(GoToMain());
                     })
                     .AddTo(btnMain);
+            }
+
+            //メインシーンに移る
+            IEnumerator GoToMain()
+            {
+                //ルームに参加するまで待つ
+                yield return new WaitUntil(() => photonController.JoinedRoom);
+
+                //メインシーンを読み込む
+                SceneManager.LoadScene("Main");
             }
         }
     }
