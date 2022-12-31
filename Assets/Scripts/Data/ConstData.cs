@@ -16,8 +16,6 @@ namespace SchoolMetaverse
 
         public const float CAMERA_HEIGHT = 1.3f;//カメラの高さ
 
-        public const float MINI_POS_Z = -4f;//プレイヤーが居ても良い座標zの最小値
-
         public const string PASSCODE = "0308";//パスコード
 
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
