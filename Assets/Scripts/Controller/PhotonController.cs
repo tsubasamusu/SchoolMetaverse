@@ -22,7 +22,7 @@ namespace SchoolMetaverse
         public void ConnectMasterServer()
         {
             //マスタークライアントがシーンをロードしたら、それ以外のクライアントも同じシーンをロードする
-            PhotonNetwork.AutomaticallySyncScene = true;
+            PhotonNetwork.AutomaticallySyncScene = true;//必須
 
             //マスターサーバーに接続したなら
             if (PhotonNetwork.IsConnected)
@@ -30,7 +30,7 @@ namespace SchoolMetaverse
                 //ランダムなルームに入る
                 PhotonNetwork.JoinRandomRoom();
             }
-            //マスターサーバーに接続できなかったら
+            //マスターサーバーに接続していないなら
             else
             {
                 //マスターサーバーへの接続し、その結果を取得する
