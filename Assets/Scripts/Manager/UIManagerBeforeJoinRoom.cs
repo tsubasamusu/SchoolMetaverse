@@ -27,7 +27,7 @@ namespace SchoolMetaverse
         private InputField inputField;//InputField
 
         [SerializeField]
-        private PhotonController photonController;
+        private PhotonController photonController;//PhotonController
 
         /// <summary>
         /// ゲーム開始直後に呼び出される
@@ -95,6 +95,9 @@ namespace SchoolMetaverse
             //メインシーンに移る
             IEnumerator GoToMain()
             {
+                //マスターサーバーに繋ぐ
+                photonController.ConnectMasterServer();
+
                 //ルームに参加するまで待つ
                 yield return new WaitUntil(() => photonController.JoinedRoom);
 

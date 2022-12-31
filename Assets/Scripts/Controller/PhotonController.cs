@@ -17,19 +17,13 @@ namespace SchoolMetaverse
         public bool JoinedRoom { get => joinedRoom; }
 
         /// <summary>
-        /// Startメソッドより前に呼び出される
+        /// マスターサーバーに接続する
         /// </summary>
-        private void Awake()
+        public void ConnectMasterServer()
         {
             //マスタークライアントがシーンをロードしたら、それ以外のクライアントも同じシーンをロードする
             PhotonNetwork.AutomaticallySyncScene = true;
-        }
 
-        /// <summary>
-        /// ゲーム開始直以後に呼び出される
-        /// </summary>
-        private void Start()
-        {
             //マスターサーバーに接続したなら
             if (PhotonNetwork.IsConnected)
             {
