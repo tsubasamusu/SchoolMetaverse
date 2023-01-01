@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManagerMain : MonoBehaviour
+namespace SchoolMetaverse
 {
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// ƒ‹[ƒ€Q‰ÁŒã‚ÌUI‚ğ§Œä‚·‚é
+    /// </summary>
+    public class UIManagerMain : MonoBehaviour
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
