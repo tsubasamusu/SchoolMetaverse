@@ -29,7 +29,7 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //視点移動キーが押されたら、マウスカーソルを中央に移動させる
-                    if(Input.GetKeyDown(ConstData.VIEWPOINT_MOVE_KEY))Cursor.lockState = CursorLockMode.Locked;
+                    if (Input.GetKeyDown(ConstData.VIEWPOINT_MOVE_KEY)) Cursor.lockState = CursorLockMode.Locked;
 
                     //視点移動キーが押されていないなら
                     if (!Input.GetKey(ConstData.VIEWPOINT_MOVE_KEY))
@@ -54,8 +54,8 @@ namespace SchoolMetaverse
                     if (Cursor.lockState == CursorLockMode.None)
                     {
                         //カメラの適切な角度を取得する
-                        cameraAngle.y += ((Input.mousePosition.x - lastMousePos.x) * ConstData.LOOK_SENSITIVITY);
-                        cameraAngle.x -= ((Input.mousePosition.y - lastMousePos.y) * ConstData.LOOK_SENSITIVITY);
+                        cameraAngle.y += (Input.mousePosition.x - lastMousePos.x) * ConstData.LOOK_SENSITIVITY * Time.deltaTime;
+                        cameraAngle.x -= (Input.mousePosition.y - lastMousePos.y) * ConstData.LOOK_SENSITIVITY * Time.deltaTime;
 
                         //取得した角度xに制限を加える
                         cameraAngle.x = Mathf.Clamp(cameraAngle.x, -ConstData.MAX_CAMERA_ANGLE_X, ConstData.MAX_CAMERA_ANGLE_X);

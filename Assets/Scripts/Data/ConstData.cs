@@ -6,7 +6,7 @@ namespace SchoolMetaverse
     {
         public const int MAX_PLAYERS = 10;//最大参加人数
 
-        public const float LOOK_SENSITIVITY = 0.1f;//視点感度
+        public const float LOOK_SENSITIVITY = 10f;//視点感度
 
         public const float MAX_CUSOR_LENGTH_FROM_CENTER = 50f;//マウスカーソルの中央からの最大値
 

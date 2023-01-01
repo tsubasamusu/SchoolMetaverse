@@ -7,6 +7,12 @@ namespace SchoolMetaverse
     /// </summary>
     public class PictureManager : MonoBehaviour
     {
-        
+        /// <summary>
+        /// ‰æ‘œ‚ğæ“¾‚µA•\¦‚·‚é
+        /// </summary>
+        public void GetAndDisplayPicture()
+        {
+
+        }
     }
 }
