@@ -46,10 +46,7 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
-            //‰æ‘œ‘—Mƒ{ƒ^ƒ“‚ð‰Ÿ‚³‚ê‚½Û‚Ìˆ—
-            btnPicture.OnClickAsObservable()
-                .Subscribe(_ =>pictureManager.GetPicture())
-                .AddTo(this);
+
         }
     }
 }
