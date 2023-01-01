@@ -3795,7 +3795,7 @@ GameObject:
   - component: {fileID: 854384157}
   - component: {fileID: 854384158}
   m_Layer: 0
-  m_Name: UIManagerAfterJoinRoom
+  m_Name: UIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7281,7 +7281,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pictureManager: {fileID: 803585813}
-  playersTran: {fileID: 0}
   spawnTran: {fileID: 1160912645}
   setUpList:
   - mode: 0

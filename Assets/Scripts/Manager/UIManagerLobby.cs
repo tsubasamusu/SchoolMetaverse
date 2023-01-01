@@ -9,7 +9,7 @@ namespace SchoolMetaverse
     /// <summary>
     /// ルーム参加前のUIを制御する
     /// </summary>
-    public class UIManagerBeforeJoinRoom : MonoBehaviour
+    public class UIManagerLobby : MonoBehaviour
     {
         [SerializeField]
         private Text txtPlaceholder;//スペースホルダのテキスト

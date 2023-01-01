@@ -2847,8 +2847,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: isWalking_F
+  - Type: 4
+    SynchronizeType: 1
+    Name: isWalking_R
+  - Type: 4
+    SynchronizeType: 1
+    Name: isWalking_B
+  - Type: 4
+    SynchronizeType: 1
+    Name: isWalking_L
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
 --- !u!114 &7589984045048344681
 MonoBehaviour:
   m_ObjectHideFlags: 0
