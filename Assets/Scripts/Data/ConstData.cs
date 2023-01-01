@@ -25,5 +25,7 @@ namespace SchoolMetaverse
         public const KeyCode WALK_B_KEY = KeyCode.DownArrow;//後ろへ進むキー
 
         public const KeyCode WALK_L_KEY = KeyCode.LeftArrow;//左へ進むキー
+
+        public const KeyCode VIEWPOINT_MOVE_KEY = KeyCode.Mouse1;//視点移動キー
     }
 }

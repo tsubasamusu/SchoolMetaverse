@@ -7,7 +7,7 @@ using UniRx.Triggers;
 
 namespace SchoolMetaverse
 {
-    public class CameraController : MonoBehaviourPunCallbacks,ISetUp
+    public class CameraController : MonoBehaviourPunCallbacks, ISetUp
     {
         /// <summary>
         /// カメラの初期設定を行う
@@ -17,7 +17,7 @@ namespace SchoolMetaverse
             //このカメラの所有者が自分でなければ、以降の処理を行わない
             if (!photonView.IsMine) return;
 
-            //マウスからの入力
+            //目標角度
             float yRot = 0f;
             float xRot = 0f;
 
@@ -25,17 +25,20 @@ namespace SchoolMetaverse
             float currentYRot = 0f;
             float currentXRot = 0f;
 
-            //速度の保持用
+            //速度（保持用）
             float yRotVelocity = 0f;
             float xRotVelocity = 0f;
+
+            //現在の角度（保持用）
+            Vector3 currentEulerAngles = Vector3.zero;
 
             //カメラの制御
             this.UpdateAsObservable()
                 .Subscribe(_ =>
                 {
                     //マウスの移動を取得する
-                    yRot += Input.GetAxis("Mouse X") * ConstData.LOOK_SENSITIVITY;
                     xRot -= Input.GetAxis("Mouse Y") * ConstData.LOOK_SENSITIVITY;
+                    yRot += Input.GetAxis("Mouse X") * ConstData.LOOK_SENSITIVITY;
 
                     //現在の適切な角度を取得する
                     currentXRot = Mathf.SmoothDamp(currentXRot, xRot, ref xRotVelocity, ConstData.LOOK_SMOOTH);
@@ -44,8 +47,28 @@ namespace SchoolMetaverse
                     //取得した角度xに制限を加える
                     currentXRot = Mathf.Clamp(currentXRot, -ConstData.MAX_CAMERA_ANGLE_X, ConstData.MAX_CAMERA_ANGLE_X);
 
-                    //カメラを回転させる
-                    transform.eulerAngles = new(currentXRot, currentYRot, 0);
+                    //視点移動キーが押されているなら
+                    if (Input.GetKey(ConstData.VIEWPOINT_MOVE_KEY))
+                    {
+                        //カメラを回転させる
+                        transform.eulerAngles = new(currentXRot, currentYRot, 0);
+
+                        //現在の角度の記録を初期化する
+                        currentEulerAngles = Vector3.zero;
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //現在の角度が記録されていないなら
+                    if (currentEulerAngles == Vector3.zero)
+                    {
+                        //現在の角度を記録する
+                        currentEulerAngles = transform.eulerAngles;
+                    }
+
+                    //現在の角度を維持する
+                    transform.eulerAngles = currentEulerAngles;
                 })
                 .AddTo(this);
         }
