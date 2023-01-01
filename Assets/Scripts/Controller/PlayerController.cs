@@ -30,6 +30,9 @@ namespace SchoolMetaverse
                     //キャラクターの向きをカメラに合わせる
                     transform.eulerAngles = new(0f, Camera.main.transform.eulerAngles.y, 0f);
 
+                    //自分の体を非表示にする
+                    transform.GetChild(1).gameObject.SetActive(false);
+
                     //移動方向を取得する
                     Vector3 movement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
