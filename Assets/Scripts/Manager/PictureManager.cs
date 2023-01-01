@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using System.IO;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -10,16 +11,28 @@ namespace SchoolMetaverse
     public class PictureManager : MonoBehaviour
     {
         /// <summary>
-        /// ダイアログを用いてファイル名を取得する
+        /// 画像を取得する
         /// </summary>
-        /// <returns>ファイル名</returns>
-        private string GetFileNameByDialog()
+        public void GetPicture()
         {
-            //ファイル名の保持用
-            string fileName = string.Empty;
+            //ファイルのパスを取得する
+            string filePath = GetFilePathByDialog();
+
+            //ファイル名を取得する
+            string fileName = Path.GetFileName(filePath);
+        }
+
+        /// <summary>
+        /// ダイアログを用いてファイルのパスを取得する
+        /// </summary>
+        /// <returns>ファイルのパス</returns>
+        private string GetFilePathByDialog()
+        {
+            //ファイルパスの保持用
+            string filePath = string.Empty;
 
             //ファイル名を返す
-            return OpenDialog(ref fileName) ? fileName : string.Empty;
+            return OpenDialog(ref filePath) ? filePath : string.Empty;
         }
 
         /// <summary>
@@ -34,7 +47,7 @@ namespace SchoolMetaverse
             {
                 //ファイル名を設定する
                 FileName = fileName,
-                 
+
                 //初期フォルダを「MyPictures」に設定する
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
 
@@ -48,7 +61,7 @@ namespace SchoolMetaverse
                 Title = "画像を選択",
 
                 //カレントディレクトリを復元する
-                RestoreDirectory = true        
+                RestoreDirectory = true
             };
 
             //ダイアログを開けないなら

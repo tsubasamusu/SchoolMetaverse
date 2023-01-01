@@ -4091,6 +4091,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebad110b0c778a644bd6f1a10b72b967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  imgMainBackground: {fileID: 2056206248}
+  btnPicture: {fileID: 1245489115}
+  btnMessage: {fileID: 1877726864}
+  btnMute: {fileID: 1965658299}
+  btnSetting: {fileID: 1976402439}
+  sldBgmVolume: {fileID: 1361284213}
+  sldPictureSize: {fileID: 235635816}
+  txtMessage: {fileID: 1745440393}
+  cgSlider: {fileID: 1306764928}
+  pictureManager: {fileID: 803585813}
 --- !u!1 &889143313
 GameObject:
   m_ObjectHideFlags: 0
@@ -8547,6 +8557,10 @@ MonoBehaviour:
   setUpList:
   - mode: 0
     unityReference: {fileID: 145767401}
+    rawReference:
+      rid: -2
+  - mode: 0
+    unityReference: {fileID: 854384158}
     rawReference:
       rid: -2
   references:
