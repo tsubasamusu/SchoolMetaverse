@@ -21,6 +21,9 @@ namespace SchoolMetaverse
             //所有者が自分ではないなら、以降の処理を行わない
             if (!photonView.IsMine) return;
 
+            //ニックネームを設定する
+            PhotonNetwork.LocalPlayer.NickName = GameData.instance.playerName;
+
             //プレイヤーの名前を表示する
             photonView.RPC(nameof(PrepareDisplayPlayerName), RpcTarget.All, GameData.instance.playerName);
 

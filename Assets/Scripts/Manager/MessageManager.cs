@@ -1,4 +1,7 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
+using Photon.Realtime;
+using System.Threading;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -13,20 +16,20 @@ namespace SchoolMetaverse
         private UIManagerMain uiManagerMain;//UIManagerMain
 
         /// <summary>
-        /// メッセージのデータの更新の準備を行う
+        /// メッセージの送信の準備を行う
         /// </summary>
         /// <param name="senderName">送信者の名前</param>
         /// <param name="message">メッセージ</param>
-        public void PrepareUpdateMessageData(string senderName, string message)
-        { photonView.RPC(nameof(UpdateMessageData), RpcTarget.All, GameData.instance.playerName, message); }
+        public void PrepareSendMessage(string senderName, string message)
+        { photonView.RPC(nameof(SendMessage), RpcTarget.All, senderName, message); }
 
         /// <summary>
-        /// メッセージのデータを更新する
+        /// メッセージを送信する
         /// </summary>
         /// <param name="senderName">送信者の名前</param>
         /// <param name="message">メッセージ</param>
         [PunRPC]
-        private void UpdateMessageData(string senderName, string message)
+        private void SendMessage(string senderName, string message)
         {
             //メッセージの配列に空きが無いなら、メッセージの配列の最初の要素を空にする
             if (!CheckMessagesIsFull()) GameData.instance.messages[0] = string.Empty;
@@ -48,7 +51,7 @@ namespace SchoolMetaverse
             uiManagerMain.UpdateTxtMessage();
 
             //メッセージの配列に空きがないか調べる
-            bool CheckMessagesIsFull()
+            static bool CheckMessagesIsFull()
             {
                 //使用されている要素の数
                 int usedBoxCount = 0;
@@ -63,6 +66,42 @@ namespace SchoolMetaverse
                 //結果を返す
                 return usedBoxCount != GameData.instance.messages.Length;
             }
+        }
+
+        /// <summary>
+        /// 他のプレイヤーがルームに参加した際に呼び出される
+        /// </summary>
+        /// <param name="newPlayer">参加したプレイヤー</param>
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            //ボットからメッセージを送信する
+            SendMessageFromBotAsync(this.GetCancellationTokenOnDestroy(), newPlayer, "さんが参加しました。").Forget();
+        }
+
+        /// <summary>
+        /// 他のプレイヤーがルームから離れた際に呼び出される
+        /// </summary>
+        /// <param name="otherPlayer">離れたプレイヤー</param>
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            //ボットからメッセージを送信する
+            SendMessageFromBotAsync(this.GetCancellationTokenOnDestroy(), otherPlayer, "さんが退出しました。").Forget();
+        }
+
+        /// <summary>
+        /// ボットによるメッセージの送信を行う
+        /// </summary>
+        /// <param name="token">CancellationToken</param>
+        /// <param name="player">Player</param>
+        /// <param name="message">メッセージ</param>
+        /// <returns>待ち時間</returns>
+        private async UniTaskVoid SendMessageFromBotAsync(CancellationToken token, Player player, string message)
+        {
+            //対象のプレイヤーのニックネームが設定されるまで待つ
+            await UniTask.WaitUntil(() => player.NickName != string.Empty, cancellationToken: token);
+
+            //メッセージの送信の準備を行う
+            PrepareSendMessage("Bot", player.NickName + message);
         }
     }
 }

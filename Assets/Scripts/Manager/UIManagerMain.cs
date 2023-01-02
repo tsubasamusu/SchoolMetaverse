@@ -177,15 +177,11 @@ namespace SchoolMetaverse
             //メッセージ送信ボタンを押された際の処理
             btnSendMessage.OnClickAsObservable()
                 .Where(_ => inputField.text != string.Empty)
-                .Subscribe(_ =>
-                {
-                    //メッセージのデータの更新の準備を行う
-                    messageManager.PrepareUpdateMessageData(GameData.instance.playerName,inputField.text);
-                })
+                .Subscribe(_ => { messageManager.PrepareSendMessage(GameData.instance.playerName, inputField.text); })
                 .AddTo(this);
 
             //ボタンのアニメーションを行う
-            void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
+            static void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
         }
 
         /// <summary>
