@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Photon.Pun;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,9 +39,6 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private Text txtMessage;//メッセージのテキスト
-
-        [SerializeField]
-        private Text txtPlayerEntered;//プレイヤーが入力したテキスト
 
         [SerializeField]
         private InputField inputField;//InputField
@@ -111,6 +107,9 @@ namespace SchoolMetaverse
 
                         //InputFieldとメッセージ送信ボタンを活性化する
                         inputField.interactable = btnSendMessage.interactable = true;
+
+                        //メッセージ入力欄を空にする
+                        inputField.text = string.Empty;
                     }
                     //メッセージが表示されているなら
                     else
@@ -171,17 +170,19 @@ namespace SchoolMetaverse
 
             //メッセージ送信ボタンを押された際の処理
             btnSendMessage.OnClickAsObservable()
-                .Where(_ => txtPlayerEntered.text != string.Empty)
-                .Subscribe(_ => messageManager.UpdateMessageData(txtPlayerEntered.text,
-                    (string)PhotonNetwork.LocalPlayer.CustomProperties["PlayerName"]))
+                .Where(_ => inputField.text != string.Empty)
+                .Subscribe(_ =>
+                {
+                    //メッセージのデータを更新する
+                    messageManager.UpdateMessageData(inputField.text, GameData.instance.playerName);
+
+                    //メッセージ入力欄を空にする
+                    inputField.text = string.Empty;
+                })
                 .AddTo(this);
 
             //ボタンのアニメーションを行う
-            void PlayButtonAnimation(Button button)
-            {
-                button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f)
-                    .SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject);
-            }
+            void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
         }
 
         /// <summary>
@@ -189,16 +190,17 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetTxtMessage()
         {
-            //メッセージ
-            string message=string.Empty;
+            //メッセージ（保持用）
+            string message = string.Empty;
 
             //メッセージの配列の要素数だけ繰り返す
             for (int i = 0; i < GameData.instance.messages.Length; i++)
             {
                 //メッセージのテキストを設定する
-                 message+= GameData.instance.messages[i];
+                message += GameData.instance.messages[i];
             }
 
+            //メッセージのテキストを設定する
             txtMessage.text = message;
         }
     }
