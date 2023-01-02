@@ -49,7 +49,13 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
-            
+            //メインの背景を黒色で表示する
+            imgMainBackground.color = Color.black;
+
+            //全てのスライダーを非表示にする
+            cgSlider.alpha = 0f;
+
+
         }
     }
 }
