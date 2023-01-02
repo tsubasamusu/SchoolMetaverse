@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace SchoolMetaverse
 {
+    /// <summary>
+    /// ŒÅ’è’l‚ğŠÇ—‚·‚é
+    /// </summary>
     public static class ConstData
     {
         public const int MAX_PLAYERS = 10;//Å‘åQ‰Ál”

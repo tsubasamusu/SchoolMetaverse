@@ -397,6 +397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: 
+  message: 
 --- !u!4 &163483103
 Transform:
   m_ObjectHideFlags: 0

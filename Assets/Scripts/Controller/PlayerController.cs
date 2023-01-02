@@ -1,8 +1,9 @@
 ﻿using Photon.Pun;
-using UnityEngine;
+using System;
 using UniRx;
 using UniRx.Triggers;
-using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace SchoolMetaverse
 {
@@ -17,6 +18,15 @@ namespace SchoolMetaverse
             //所有者が自分ではないなら、以降の処理を行わない
             if (!photonView.IsMine) return;
 
+            //サーバーにプレイヤーの名前を保存する
+            GameData.instance.SavePlayerNameInServer();
+
+            //プレイヤーの名前を表示する
+            photonView.RPC(nameof(DisplayPlayerName), RpcTarget.All);
+
+            //自分の体を非表示にする
+            transform.GetChild(1).gameObject.SetActive(false);
+
             //CharacterControllerを取得する
             CharacterController characterController = GetComponent<CharacterController>();
 
@@ -29,9 +39,6 @@ namespace SchoolMetaverse
                 {
                     //キャラクターの向きをカメラに合わせる
                     transform.eulerAngles = new(0f, Camera.main.transform.eulerAngles.y, 0f);
-
-                    //自分の体を非表示にする
-                    transform.GetChild(1).gameObject.SetActive(false);
 
                     //移動方向を取得する
                     Vector3 movement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -79,6 +86,12 @@ namespace SchoolMetaverse
                 return KeyCode.None;
             }
         }
+
+        /// <summary>
+        /// ユーザー名を頭頂部に表示する
+        /// </summary>
+        [PunRPC]
+        private void DisplayPlayerName()
+        { transform.GetChild(0).GetChild(1).GetComponent<Text>().text = PhotonNetwork.LocalPlayer.NickName; }
     }
 }
-

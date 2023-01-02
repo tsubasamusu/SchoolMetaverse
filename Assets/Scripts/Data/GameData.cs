@@ -1,30 +1,25 @@
+using Photon.Pun;
 using UnityEngine;
 
 namespace SchoolMetaverse
 {
+    /// <summary>
+    /// 変動値を管理する
+    /// </summary>
     public class GameData : MonoBehaviour
     {
         [HideInInspector]
         public string playerName;//プレイヤーの名前
+
+        [HideInInspector]
+        public string message;//メッセージ
 
         public static GameData instance;//インスタンス
 
         /// <summary> 
         /// Startメソッドより前に呼び出される 
         /// </summary> 
-        private void Awake()
-        {
-            //以下、シングルトンに必須の記述 
-            if (instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
+        private void Awake() { if (instance == null) { instance = this; DontDestroyOnLoad(gameObject); } else { Destroy(gameObject); } }
 
         /// <summary>
         /// ゲーム開始直後に呼び出される
@@ -38,10 +33,11 @@ namespace SchoolMetaverse
         /// <summary>
         /// デバイスにプレイヤーの名前を保存する
         /// </summary>
-        public void SetDevicePlayerName()
-        {
-            //プレイヤーの名前を保存する
-            PlayerPrefs.SetString("PlayerName", playerName);
-        }
+        public void SavePlayerNameInDevice() { PlayerPrefs.SetString("PlayerName", playerName); }
+
+        /// <summary>
+        /// サーバーにプレイヤーの名前を保存する
+        /// </summary>
+        public void SavePlayerNameInServer() { PhotonNetwork.LocalPlayer.NickName = playerName; }
     }
 }

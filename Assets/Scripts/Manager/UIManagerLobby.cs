@@ -3,6 +3,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon.Pun;
 
 namespace SchoolMetaverse
 {
@@ -54,7 +55,7 @@ namespace SchoolMetaverse
 
             //サブボタンを押された際の処理
             btnSub.OnClickAsObservable()
-                .Subscribe(_ =>GoToEnterNameScene())
+                .Subscribe(_ => GoToEnterNameScene())
                 .AddTo(btnSub);
 
             //名前を入力する場面に移る
@@ -64,21 +65,21 @@ namespace SchoolMetaverse
                 Destroy(btnSub.gameObject);
 
                 //プレイヤーが入力したテキストを初期化する
-                inputField.text=GameData.instance.playerName;
+                inputField.text = GameData.instance.playerName;
 
                 //テキストを変更する
                 txtPlaceholder.text = "名前を入力...";
 
                 //メインボタンが押された際の処理
                 btnMain.OnClickAsObservable()
-                    .Where(_=>txtPlayerEntered.text!=string.Empty)
+                    .Where(_ => txtPlayerEntered.text != string.Empty)
                     .Subscribe(_ =>
                     {
                         //プレイヤーの名前を取得する
                         GameData.instance.playerName = txtPlayerEntered.text;
 
                         //プレイヤーの名前をデバイスに保存する
-                        GameData.instance.SetDevicePlayerName();
+                        GameData.instance.SavePlayerNameInDevice();
 
                         //InputFieldを消す
                         Destroy(inputField.gameObject);
