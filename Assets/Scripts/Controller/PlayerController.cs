@@ -1,8 +1,12 @@
-﻿using Photon.Pun;
+﻿using Cysharp.Threading.Tasks;
+using Photon.Pun;
+using Photon.Realtime;
 using System;
+using System.Threading;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SchoolMetaverse
 {
@@ -17,8 +21,18 @@ namespace SchoolMetaverse
             //所有者が自分ではないなら、以降の処理を行わない
             if (!photonView.IsMine) return;
 
-            //サーバーにプレイヤーの名前を保存する
-            GameData.instance.SavePlayerNameInServer();
+            //カスタムプロパティを作成する
+            var hashtable = new ExitGames.Client.Photon.Hashtable
+            {
+                //プレイヤーの名前を持たせる
+                ["PlayerName"] = GameData.instance.playerName
+            };
+
+            //作成したカスタムプロパティを登録する
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+
+            //プレイヤーの名前を表示する準備を行う
+            PrepareDisplayPlayerNameAsync(this.GetCancellationTokenOnDestroy()).Forget();
 
             //自分の体を非表示にする
             transform.GetChild(1).gameObject.SetActive(false);
@@ -81,6 +95,42 @@ namespace SchoolMetaverse
                 //何も押されていないなら、Noneを返す
                 return KeyCode.None;
             }
+        }
+
+        /// <summary>
+        /// プレーヤーがルームに参加した際に呼び出される
+        /// </summary>
+        /// <param name="newPlayer">参加したプレイヤー</param>
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            //プレイヤーの名前を表示する準備を行う
+            PrepareDisplayPlayerNameAsync(this.GetCancellationTokenOnDestroy()).Forget();
+        }
+
+        /// <summary>
+        /// プレイヤーの名前を表示する準備を行う
+        /// </summary>
+        /// <param name="token">CancellationToken</param>
+        /// <returns>待ち時間</returns>
+        private async UniTaskVoid PrepareDisplayPlayerNameAsync(CancellationToken token)
+        {
+            //カスタムプロパティが設定されるまで待つ
+            await UniTask.WaitUntil(() =>
+            PhotonNetwork.LocalPlayer.CustomProperties["PlayerName"] is string, cancellationToken: token);
+
+            //プレイヤーの名前を表示する
+            photonView.RPC(nameof(DisplayPlayerName), RpcTarget.All, PhotonNetwork.LocalPlayer.CustomProperties["PlayerName"]);
+        }
+
+        /// <summary>
+        /// プレイヤーの名前を表示する
+        /// </summary>
+        /// <param name="playerName">プレイヤーの名前</param>
+        [PunRPC]
+        private void DisplayPlayerName(string playerName)
+        {
+            //テキストを取得し、文字列を名前に設定する
+            transform.GetChild(0).GetChild(1).GetComponent<Text>().text = playerName;
         }
     }
 }

@@ -38,10 +38,10 @@ namespace SchoolMetaverse
         public void SavePlayerNameInDevice() { PlayerPrefs.SetString("PlayerName", playerName); }
 
         /// <summary>
-        /// サーバーにプレイヤーの名前を保存する
+        /// 同期する
         /// </summary>
-        public void SavePlayerNameInServer() { PhotonNetwork.LocalPlayer.NickName = playerName; }
-
+        /// <param name="stream">PhotonStream</param>
+        /// <param name="info">PhotonMessageInfo</param>
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
