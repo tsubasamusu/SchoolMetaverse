@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,6 +56,9 @@ namespace SchoolMetaverse
         [SerializeField]
         private CanvasGroup cgMessage;//メッセージのキャンバスグループ
 
+        [SerializeField]
+        private MessageManager messageManager;//MessageManager
+
         /// <summary>
         /// UIManagerMainの初期設定を行う
         /// </summary>
@@ -68,6 +72,9 @@ namespace SchoolMetaverse
 
             //全てのスライダーと、メッセージのキャンバスグループを非表示にする
             cgSetting.alpha = cgMessage.alpha = 0f;
+
+            //メッセージを空にする
+            txtMessage.text = string.Empty;
 
             //サブの背景を非活性化する
             imgSubBackground.gameObject.SetActive(false);
@@ -162,11 +169,31 @@ namespace SchoolMetaverse
                 })
                 .AddTo(this);
 
+            //メッセージ送信ボタンを押された際の処理
+            btnSendMessage.OnClickAsObservable()
+                .Where(_ => txtPlayerEntered.text != string.Empty)
+                .Subscribe(_ => messageManager.UpdateMessageData(txtPlayerEntered.text,
+                    (string)PhotonNetwork.LocalPlayer.CustomProperties["PlayerName"]))
+                .AddTo(this);
+
             //ボタンのアニメーションを行う
             void PlayButtonAnimation(Button button)
             {
                 button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f)
                     .SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// メッセージのテキストを設定する（改行も行う）
+        /// </summary>
+        public void SetTxtMessage()
+        {
+            //メッセージの配列の要素数だけ繰り返す
+            for (int i = 0; i < GameData.instance.messages.Length; i++)
+            {
+                //メッセージのテキストを改行しながら設定する
+                txtMessage.text += GameData.instance.messages[i] + "\n";
             }
         }
     }

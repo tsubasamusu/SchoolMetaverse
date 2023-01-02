@@ -1,4 +1,3 @@
-using Photon.Pun;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -6,13 +5,13 @@ namespace SchoolMetaverse
     /// <summary>
     /// 変動値を管理する
     /// </summary>
-    public class GameData : MonoBehaviour, IPunObservable
+    public class GameData : MonoBehaviour
     {
         [HideInInspector]
         public string playerName;//プレイヤーの名前
 
         [HideInInspector]
-        public string message;//メッセージ
+        public string[] messages = new string[ConstData.MAX_MESSAGE_LINES];//メッセージの配列
 
         public static GameData instance;//インスタンス
 
@@ -34,19 +33,5 @@ namespace SchoolMetaverse
         /// デバイスにプレイヤーの名前を保存する
         /// </summary>
         public void SavePlayerNameInDevice() { PlayerPrefs.SetString("PlayerName", playerName); }
-
-        /// <summary>
-        /// 同期する
-        /// </summary>
-        /// <param name="stream">PhotonStream</param>
-        /// <param name="info">PhotonMessageInfo</param>
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            //送信する
-            if (stream.IsWriting){stream.SendNext(message);}
-
-            //受信する
-            else{message = (string)stream.ReceiveNext();}
-        }
     }
 }

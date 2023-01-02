@@ -3495,6 +3495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45499ff0f7a5f2341b2f351c4a15a181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManagerMain: {fileID: 854384158}
 --- !u!1 &646028941
 GameObject:
   m_ObjectHideFlags: 0
@@ -4675,6 +4676,7 @@ MonoBehaviour:
   cgButton: {fileID: 199612180}
   cgSetting: {fileID: 1306764928}
   cgMessage: {fileID: 463675573}
+  messageManager: {fileID: 633243862}
 --- !u!1 &883036421
 GameObject:
   m_ObjectHideFlags: 0
@@ -8780,13 +8782,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 79
-    m_Alignment: 4
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Bot\uFF1A\u6A4B\u672C\u7FFC\u3055\u3093\u304C\u53C2\u52A0\u3057\u307E\u3057\u305F\u3002"
+  m_Text: "\u3000Bot\uFF1A\u6A4B\u672C\u7FFC\u3055\u3093\u304C\u53C2\u52A0\u3057\u307E\u3057\u305F\u3002"
 --- !u!222 &1745440394
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9375,6 +9377,10 @@ MonoBehaviour:
       rid: -2
   - mode: 0
     unityReference: {fileID: 854384158}
+    rawReference:
+      rid: -2
+  - mode: 0
+    unityReference: {fileID: 633243862}
     rawReference:
       rid: -2
   references:

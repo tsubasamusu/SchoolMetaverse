@@ -7,7 +7,9 @@ namespace SchoolMetaverse
     /// </summary>
     public static class ConstData
     {
-        public const int MAX_PLAYERS = 10;//最大参加人数
+        public const int MAX_PLAYERS = 5;//最大参加人数
+
+        public const int MAX_MESSAGE_LINES = 13;//メッセージの表示可能な最大行数
 
         public const float LOOK_SENSITIVITY = 10f;//視点感度
 
