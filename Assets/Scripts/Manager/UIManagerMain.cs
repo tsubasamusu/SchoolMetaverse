@@ -50,7 +50,7 @@ namespace SchoolMetaverse
         private CanvasGroup cgButton;//ボタンのキャンバスグループ
 
         [SerializeField]
-        private CanvasGroup cgSlider;//スライダーのキャンバスグループ
+        private CanvasGroup cgSetting;//スライダーのキャンバスグループ
 
         [SerializeField]
         private CanvasGroup cgMessage;//メッセージのキャンバスグループ
@@ -67,7 +67,7 @@ namespace SchoolMetaverse
             cgButton.alpha = 1f;
 
             //全てのスライダーと、メッセージのキャンバスグループを非表示にする
-            cgSlider.alpha = cgMessage.alpha = 0f;
+            cgSetting.alpha = cgMessage.alpha = 0f;
 
             //サブの背景を非活性化する
             imgSubBackground.gameObject.SetActive(false);
@@ -78,10 +78,21 @@ namespace SchoolMetaverse
                 //メインの背景を消す
                 .OnComplete(() => Destroy(imgMainBackground.gameObject));
 
-            //メッセージボタンが押された際の処理
+            //メッセージボタンを押された際の処理
             btnMessage.OnClickAsObservable()
+                .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
                 .Subscribe(_ =>
                 {
+                    //設定が表示されているなら
+                    if (cgSetting.alpha != 0f)
+                    {
+                        //ボタンのアニメーションを行う
+                        PlayButtonAnimation(btnSetting);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
                     //メッセージが表示されていないなら
                     if (cgMessage.alpha == 0f)
                     {
@@ -108,6 +119,55 @@ namespace SchoolMetaverse
                     }
                 })
                 .AddTo(this);
+
+            //設定ボタンを押された際の処理
+            btnSetting.OnClickAsObservable()
+                .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
+                .Subscribe(_ =>
+                {
+                    //メッセージが表示されているなら
+                    if (cgMessage.alpha != 0f)
+                    {
+                        //ボタンのアニメーションを行う
+                        PlayButtonAnimation(btnMessage);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //設定が表示されていないなら
+                    if (cgSetting.alpha == 0f)
+                    {
+                        //設定のキャンバスグループを表示する
+                        cgSetting.alpha = 1f;
+
+                        //サブの背景を活性化する
+                        imgSubBackground.gameObject.SetActive(true);
+
+                        //BGMの音量のスライダーと、画像のサイズのスライダーを活性化する
+                        sldBgmVolume.interactable = sldPictureSize.interactable = true;
+                    }
+                    //設定が表示されているなら
+                    else
+                    {
+                        //設定のキャンバスグループを非表示にする
+                        cgSetting.alpha = 0f;
+
+                        //サブの背景を非活性化する
+                        imgSubBackground.gameObject.SetActive(false);
+
+                        //BGMの音量のスライダーと、画像のサイズのスライダーを非活性化する
+                        sldBgmVolume.interactable = sldPictureSize.interactable = false;
+                    }
+                })
+                .AddTo(this);
+
+            //ボタンのアニメーションを行う
+            void PlayButtonAnimation(Button button)
+            {
+                button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f)
+                    .SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject);
+            }
         }
     }
 }

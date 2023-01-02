@@ -531,7 +531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &103357337
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4673,7 +4673,7 @@ MonoBehaviour:
   txtPlayerEntered: {fileID: 179322773}
   inputField: {fileID: 646028943}
   cgButton: {fileID: 199612180}
-  cgSlider: {fileID: 1306764928}
+  cgSetting: {fileID: 1306764928}
   cgMessage: {fileID: 463675573}
 --- !u!1 &883036421
 GameObject:
@@ -7086,7 +7086,7 @@ GameObject:
   - component: {fileID: 1306764927}
   - component: {fileID: 1306764928}
   m_Layer: 5
-  m_Name: cgSlider
+  m_Name: cgSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
