@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -5,14 +6,27 @@ namespace SchoolMetaverse
     /// <summary>
     /// メッセージを制御する
     /// </summary>
-    public class MessageManager : MonoBehaviour
+    [RequireComponent(typeof(PhotonView))]
+    public class MessageManager : MonoBehaviourPunCallbacks
     {
+        [SerializeField]
+        private UIManagerMain uiManagerMain;//UIManagerMain
+
+        /// <summary>
+        /// メッセージのデータの更新の準備を行う
+        /// </summary>
+        /// <param name="senderName">送信者の名前</param>
+        /// <param name="message">メッセージ</param>
+        public void PrepareUpdateMessageData(string senderName, string message)
+        { photonView.RPC(nameof(UpdateMessageData), RpcTarget.All, GameData.instance.playerName, message); }
+
         /// <summary>
         /// メッセージのデータを更新する
         /// </summary>
-        /// <param name="message">メッセージ</param>
         /// <param name="senderName">送信者の名前</param>
-        public void UpdateMessageData(string message, string senderName)
+        /// <param name="message">メッセージ</param>
+        [PunRPC]
+        private void UpdateMessageData(string senderName, string message)
         {
             //メッセージの配列に空きが無いなら、メッセージの配列の最初の要素を空にする
             if (!CheckMessagesIsFull()) GameData.instance.messages[0] = string.Empty;
@@ -29,6 +43,9 @@ namespace SchoolMetaverse
 
             //メッセージの配列に取得したメッセージを登録する
             GameData.instance.messages[ConstData.MAX_MESSAGE_LINES - 1] = "　" + senderName + "：" + message + "\n";
+
+            //メッセージのテキストを更新する
+            uiManagerMain.UpdateTxtMessage();
 
             //メッセージの配列に空きがないか調べる
             bool CheckMessagesIsFull()

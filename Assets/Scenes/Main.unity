@@ -3460,6 +3460,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 633243861}
+  - component: {fileID: 633243863}
   - component: {fileID: 633243862}
   m_Layer: 0
   m_Name: MessageManager
@@ -3495,6 +3496,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45499ff0f7a5f2341b2f351c4a15a181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManagerMain: {fileID: 854384158}
+--- !u!114 &633243863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633243860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 123
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &646028941
 GameObject:
   m_ObjectHideFlags: 0

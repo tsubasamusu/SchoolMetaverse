@@ -9,7 +9,7 @@ namespace SchoolMetaverse
     /// <summary>
     /// ルーム参加後のUIを制御する
     /// </summary>
-    public class UIManagerMain : MonoBehaviour, ISetUp
+    public class UIManagerMain : MonoBehaviourPunCallbacks, ISetUp
     {
         [SerializeField]
         private Image imgMainBackground;//メインの背景
@@ -55,6 +55,11 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private MessageManager messageManager;//MessageManager
+
+        /// <summary>
+        /// InputField（取得用）
+        /// </summary>
+        public InputField InputField { get => inputField; }
 
         /// <summary>
         /// UIManagerMainの初期設定を行う
@@ -174,29 +179,35 @@ namespace SchoolMetaverse
                 .Where(_ => inputField.text != string.Empty)
                 .Subscribe(_ =>
                 {
-                    //メッセージのデータを更新する
-                    messageManager.UpdateMessageData(inputField.text, GameData.instance.playerName);
-
-                    //メッセージ（保持用）
-                    string message = string.Empty;
-
-                    //メッセージの配列の要素数だけ繰り返す
-                    for (int i = 0; i < GameData.instance.messages.Length; i++)
-                    {
-                        //メッセージのテキストを設定する
-                        message += GameData.instance.messages[i];
-                    }
-
-                    //メッセージのテキストを設定する
-                    txtMessage.text = message;
-
-                    //メッセージ入力欄を空にする
-                    inputField.text = string.Empty;
+                    //メッセージのデータの更新の準備を行う
+                    messageManager.PrepareUpdateMessageData(GameData.instance.playerName,inputField.text);
                 })
                 .AddTo(this);
 
             //ボタンのアニメーションを行う
             void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
+        }
+
+        /// <summary>
+        /// メッセージのテキストを更新する
+        /// </summary>
+        public void UpdateTxtMessage()
+        {
+            //メッセージ（保持用）
+            string message = string.Empty;
+
+            //メッセージの配列の要素数だけ繰り返す
+            for (int i = 0; i < GameData.instance.messages.Length; i++)
+            {
+                //メッセージのテキストを設定する
+                message += GameData.instance.messages[i];
+            }
+
+            //メッセージのテキストを設定する
+            txtMessage.text = message;
+
+            //メッセージ入力欄を空にする
+            inputField.text = string.Empty;
         }
     }
 }
