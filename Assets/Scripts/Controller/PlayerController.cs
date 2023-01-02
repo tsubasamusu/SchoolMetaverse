@@ -22,7 +22,7 @@ namespace SchoolMetaverse
             if (!photonView.IsMine) return;
 
             //テキストの位置情報を取得する
-            RectTransform textTran = transform.GetChild(0).GetChild(1).GetComponent<RectTransform>();
+            Transform textTran = transform.GetChild(2);
 
             //カスタムプロパティを作成する
             var hashtable = new ExitGames.Client.Photon.Hashtable
@@ -38,7 +38,7 @@ namespace SchoolMetaverse
             PrepareDisplayPlayerNameAsync(this.GetCancellationTokenOnDestroy()).Forget();
 
             //自分の体を非表示にする
-            //transform.GetChild(1).gameObject.SetActive(false);
+            transform.GetChild(0).gameObject.SetActive(false);
 
             //CharacterControllerを取得する
             CharacterController characterController = GetComponent<CharacterController>();
@@ -133,7 +133,7 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="playerName">プレイヤーの名前</param>
         [PunRPC]
-        private void DisplayPlayerName(string playerName) { transform.GetChild(0).GetChild(1).GetComponent<Text>().text = playerName; }
+        private void DisplayPlayerName(string playerName) { transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>().text = playerName; }
 
         /// <summary>
         /// プレイヤーの名前を自分に向かせる
@@ -141,6 +141,6 @@ namespace SchoolMetaverse
         /// <param name="myPos">自分の座標</param>
         /// <param name="textTran">テキストの位置情報</param>
         [PunRPC]
-        private void LookPlayerNameAtMe(Vector3 myPos, RectTransform textTran) { textTran.LookAt(myPos); }
+        private void LookPlayerNameAtMe(Vector3 myPos, Transform textTran) { textTran.LookAt(myPos); }
     }
 }
