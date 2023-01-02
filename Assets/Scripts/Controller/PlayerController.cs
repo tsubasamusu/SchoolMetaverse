@@ -21,6 +21,9 @@ namespace SchoolMetaverse
             //所有者が自分ではないなら、以降の処理を行わない
             if (!photonView.IsMine) return;
 
+            //テキストの位置情報を取得する
+            RectTransform textTran = transform.GetChild(0).GetChild(1).GetComponent<RectTransform>();
+
             //カスタムプロパティを作成する
             var hashtable = new ExitGames.Client.Photon.Hashtable
             {
@@ -35,7 +38,7 @@ namespace SchoolMetaverse
             PrepareDisplayPlayerNameAsync(this.GetCancellationTokenOnDestroy()).Forget();
 
             //自分の体を非表示にする
-            transform.GetChild(1).gameObject.SetActive(false);
+            //transform.GetChild(1).gameObject.SetActive(false);
 
             //CharacterControllerを取得する
             CharacterController characterController = GetComponent<CharacterController>();
@@ -47,6 +50,9 @@ namespace SchoolMetaverse
             this.UpdateAsObservable()
                 .Subscribe(_ =>
                 {
+                    //他のプレイヤーの名前を自分に向かせる
+                    //photonView.RPC(nameof(LookPlayerNameAtMe), RpcTarget.All, transform.position, textTran);
+
                     //キャラクターの向きをカメラに合わせる
                     transform.eulerAngles = new(0f, Camera.main.transform.eulerAngles.y, 0f);
 
@@ -58,7 +64,7 @@ namespace SchoolMetaverse
                         new Vector3(1f, 0f, 1f));
 
                     //移動する
-                    characterController.Move(movement * Time.fixedDeltaTime * ConstData.MOVE_SPEED);
+                    characterController.Move(ConstData.MOVE_SPEED * Time.deltaTime * movement);
 
                     //アニメーションの名前を取得する
                     AnimationName animationName = GetPressedKey() switch
@@ -127,10 +133,14 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="playerName">プレイヤーの名前</param>
         [PunRPC]
-        private void DisplayPlayerName(string playerName)
-        {
-            //テキストを取得し、文字列を名前に設定する
-            transform.GetChild(0).GetChild(1).GetComponent<Text>().text = playerName;
-        }
+        private void DisplayPlayerName(string playerName) { transform.GetChild(0).GetChild(1).GetComponent<Text>().text = playerName; }
+
+        /// <summary>
+        /// プレイヤーの名前を自分に向かせる
+        /// </summary>
+        /// <param name="myPos">自分の座標</param>
+        /// <param name="textTran">テキストの位置情報</param>
+        [PunRPC]
+        private void LookPlayerNameAtMe(Vector3 myPos, RectTransform textTran) { textTran.LookAt(myPos); }
     }
 }

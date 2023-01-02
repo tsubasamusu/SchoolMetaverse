@@ -13,7 +13,7 @@ namespace SchoolMetaverse
 
         public const float MAX_CUSOR_LENGTH_FROM_CENTER = 50f;//マウスカーソルの中央からの最大値
 
-        public const float MOVE_SPEED = 0.5f;//移動速度
+        public const float MOVE_SPEED = 1.3f;//移動速度
 
         public const float MAX_CAMERA_ANGLE_X = 40f;//カメラの最大角度x
 
