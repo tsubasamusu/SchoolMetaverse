@@ -1,6 +1,4 @@
 using Photon.Pun;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -44,16 +42,11 @@ namespace SchoolMetaverse
         /// <param name="info">PhotonMessageInfo</param>
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            if (stream.IsWriting)
-            {
-                // 自身のアバターのスタミナを送信する
-                //stream.SendNext(playerNames);
-            }
-            else
-            {
-                // 他プレイヤーのアバターのスタミナを受信する
-                //playerNames = (string[])stream.ReceiveNext();
-            }
+            //送信する
+            if (stream.IsWriting){stream.SendNext(message);}
+
+            //受信する
+            else{message = (string)stream.ReceiveNext();}
         }
     }
 }

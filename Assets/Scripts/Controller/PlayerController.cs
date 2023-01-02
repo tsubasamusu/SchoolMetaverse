@@ -21,9 +21,6 @@ namespace SchoolMetaverse
             //所有者が自分ではないなら、以降の処理を行わない
             if (!photonView.IsMine) return;
 
-            //テキストの位置情報を取得する
-            Transform textTran = transform.GetChild(2);
-
             //カスタムプロパティを作成する
             var hashtable = new ExitGames.Client.Photon.Hashtable
             {
@@ -50,9 +47,6 @@ namespace SchoolMetaverse
             this.UpdateAsObservable()
                 .Subscribe(_ =>
                 {
-                    //他のプレイヤーの名前を自分に向かせる
-                    //photonView.RPC(nameof(LookPlayerNameAtMe), RpcTarget.All, transform.position, textTran);
-
                     //キャラクターの向きをカメラに合わせる
                     transform.eulerAngles = new(0f, Camera.main.transform.eulerAngles.y, 0f);
 
@@ -134,13 +128,5 @@ namespace SchoolMetaverse
         /// <param name="playerName">プレイヤーの名前</param>
         [PunRPC]
         private void DisplayPlayerName(string playerName) { transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>().text = playerName; }
-
-        /// <summary>
-        /// プレイヤーの名前を自分に向かせる
-        /// </summary>
-        /// <param name="myPos">自分の座標</param>
-        /// <param name="textTran">テキストの位置情報</param>
-        [PunRPC]
-        private void LookPlayerNameAtMe(Vector3 myPos, Transform textTran) { textTran.LookAt(myPos); }
     }
 }

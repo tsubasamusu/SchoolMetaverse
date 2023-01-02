@@ -15,6 +15,9 @@ namespace SchoolMetaverse
         private Image imgMainBackground;//ƒƒCƒ“‚Ì”wŒi
 
         [SerializeField]
+        private Image imgSubBackground;//ƒTƒu‚Ì”wŒi
+
+        [SerializeField]
         private Button btnPicture;//‰æ‘œ‘—Mƒ{ƒ^ƒ“
 
         [SerializeField]
