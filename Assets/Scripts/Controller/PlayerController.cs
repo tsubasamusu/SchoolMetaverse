@@ -3,7 +3,6 @@ using System;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SchoolMetaverse
 {
@@ -11,7 +10,7 @@ namespace SchoolMetaverse
     public class PlayerController : MonoBehaviourPunCallbacks
     {
         /// <summary>
-        /// PlayerControllerの初期設定を行う
+        /// プレイヤーの初期設定を行う
         /// </summary>
         public void SetUp()
         {
@@ -20,9 +19,6 @@ namespace SchoolMetaverse
 
             //サーバーにプレイヤーの名前を保存する
             GameData.instance.SavePlayerNameInServer();
-
-            //プレイヤーの名前を表示する
-            photonView.RPC(nameof(DisplayPlayerName), RpcTarget.All);
 
             //自分の体を非表示にする
             transform.GetChild(1).gameObject.SetActive(false);
@@ -86,12 +82,5 @@ namespace SchoolMetaverse
                 return KeyCode.None;
             }
         }
-
-        /// <summary>
-        /// ユーザー名を頭頂部に表示する
-        /// </summary>
-        [PunRPC]
-        private void DisplayPlayerName()
-        { transform.GetChild(0).GetChild(1).GetComponent<Text>().text = PhotonNetwork.LocalPlayer.NickName; }
     }
 }

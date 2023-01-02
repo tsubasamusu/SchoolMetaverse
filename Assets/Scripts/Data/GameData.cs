@@ -1,4 +1,6 @@
 using Photon.Pun;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -6,7 +8,7 @@ namespace SchoolMetaverse
     /// <summary>
     /// 変動値を管理する
     /// </summary>
-    public class GameData : MonoBehaviour
+    public class GameData : MonoBehaviour, IPunObservable
     {
         [HideInInspector]
         public string playerName;//プレイヤーの名前
@@ -39,5 +41,19 @@ namespace SchoolMetaverse
         /// サーバーにプレイヤーの名前を保存する
         /// </summary>
         public void SavePlayerNameInServer() { PhotonNetwork.LocalPlayer.NickName = playerName; }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                // 自身のアバターのスタミナを送信する
+                //stream.SendNext(playerNames);
+            }
+            else
+            {
+                // 他プレイヤーのアバターのスタミナを受信する
+                //playerNames = (string[])stream.ReceiveNext();
+            }
+        }
     }
 }
