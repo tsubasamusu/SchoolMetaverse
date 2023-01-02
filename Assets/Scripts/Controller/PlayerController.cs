@@ -21,18 +21,8 @@ namespace SchoolMetaverse
             //所有者が自分ではないなら、以降の処理を行わない
             if (!photonView.IsMine) return;
 
-            //カスタムプロパティを作成する
-            var hashtable = new ExitGames.Client.Photon.Hashtable
-            {
-                //プレイヤーの名前を持たせる
-                ["PlayerName"] = GameData.instance.playerName
-            };
-
-            //作成したカスタムプロパティを登録する
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
-
-            //プレイヤーの名前を表示する準備を行う
-            PrepareDisplayPlayerNameAsync(this.GetCancellationTokenOnDestroy()).Forget();
+            //プレイヤーの名前を表示する
+            photonView.RPC(nameof(PrepareDisplayPlayerName), RpcTarget.All, GameData.instance.playerName);
 
             //自分の体を非表示にする
             transform.GetChild(0).gameObject.SetActive(false);
@@ -98,35 +88,43 @@ namespace SchoolMetaverse
         }
 
         /// <summary>
-        /// プレーヤーがルームに参加した際に呼び出される
+        /// 他のプレーヤーがルームに参加した際に呼び出される
         /// </summary>
         /// <param name="newPlayer">参加したプレイヤー</param>
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            //プレイヤーの名前を表示する準備を行う
-            PrepareDisplayPlayerNameAsync(this.GetCancellationTokenOnDestroy()).Forget();
+            //プレイヤーの名前を表示する
+            photonView.RPC(nameof(PrepareDisplayPlayerName), RpcTarget.All, GameData.instance.playerName);
         }
 
         /// <summary>
         /// プレイヤーの名前を表示する準備を行う
         /// </summary>
-        /// <param name="token">CancellationToken</param>
-        /// <returns>待ち時間</returns>
-        private async UniTaskVoid PrepareDisplayPlayerNameAsync(CancellationToken token)
-        {
-            //カスタムプロパティが設定されるまで待つ
-            await UniTask.WaitUntil(() =>
-            PhotonNetwork.LocalPlayer.CustomProperties["PlayerName"] is string, cancellationToken: token);
-
-            //プレイヤーの名前を表示する
-            photonView.RPC(nameof(DisplayPlayerName), RpcTarget.All, PhotonNetwork.LocalPlayer.CustomProperties["PlayerName"]);
-        }
+        /// <param name="playerName">プレイヤーの名前</param>
+        [PunRPC]
+        private void PrepareDisplayPlayerName(string playerName) { DisplayPlayerNameAsync(playerName, this.GetCancellationTokenOnDestroy()).Forget(); }
 
         /// <summary>
         /// プレイヤーの名前を表示する
         /// </summary>
         /// <param name="playerName">プレイヤーの名前</param>
-        [PunRPC]
-        private void DisplayPlayerName(string playerName) { transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>().text = playerName; }
+        private async UniTaskVoid DisplayPlayerNameAsync(string playerName, CancellationToken token)
+        {
+            //テキスト
+            Text txtPlayerName = null;
+
+            //テキストを取得できないなら繰り返す
+            while (txtPlayerName == null)
+            {
+                //テキストを取得する
+                txtPlayerName = transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>();
+
+                //1フレーム待つ
+                await UniTask.Yield(token);
+            }
+
+            //テキストを設定する
+            txtPlayerName.text = playerName;
+        }
     }
 }
