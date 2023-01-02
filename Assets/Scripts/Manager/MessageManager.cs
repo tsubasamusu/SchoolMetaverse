@@ -49,7 +49,7 @@ namespace SchoolMetaverse
             }
 
             //メッセージの配列に取得したメッセージを登録する
-            GameData.instance.messages[ConstData.MAX_MESSAGE_LINES - 1] = "　" + senderName + "：" + message;
+            GameData.instance.messages[ConstData.MAX_MESSAGE_LINES - 1] = "　" + senderName + "：" + message + "\n";
 
             //カスタムプロパティにメッセージを登録する
             PhotonNetwork.CurrentRoom.CustomProperties["Messages"] = GameData.instance.messages;
@@ -75,17 +75,17 @@ namespace SchoolMetaverse
             }
         }
 
-        /// <summary>
-        /// ルームのカスタムプロパティが更新された際に呼び出される
-        /// </summary>
-        /// <param name="propertiesThatChanged">更新されたプロパティ</param>
-        public virtual void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
-        {
-            //更新されたルームのデータを取得する
-            GameData.instance.messages = (string[])PhotonNetwork.CurrentRoom.CustomProperties["Messages"];
+        ///// <summary>
+        ///// ルームのカスタムプロパティが更新された際に呼び出される
+        ///// </summary>
+        ///// <param name="propertiesThatChanged">更新されたプロパティ</param>
+        //public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        //{
+        //    //更新されたルームのデータを取得する
+        //    GameData.instance.messages = (string[])PhotonNetwork.CurrentRoom.CustomProperties["Messages"];
 
-            //UIを設定する
-            uiManagerMain.SetTxtMessage();
-        }
+        //    //UIを設定する
+        //    uiManagerMain.SetTxtMessage();
+        //}
     }
 }

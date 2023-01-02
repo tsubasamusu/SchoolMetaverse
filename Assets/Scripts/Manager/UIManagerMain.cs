@@ -185,16 +185,21 @@ namespace SchoolMetaverse
         }
 
         /// <summary>
-        /// メッセージのテキストを設定する（改行も行う）
+        /// メッセージのテキストを設定する
         /// </summary>
         public void SetTxtMessage()
         {
+            //メッセージ
+            string message=string.Empty;
+
             //メッセージの配列の要素数だけ繰り返す
             for (int i = 0; i < GameData.instance.messages.Length; i++)
             {
-                //メッセージのテキストを改行しながら設定する
-                txtMessage.text += GameData.instance.messages[i] + "\n";
+                //メッセージのテキストを設定する
+                 message+= GameData.instance.messages[i];
             }
+
+            txtMessage.text = message;
         }
     }
 }
