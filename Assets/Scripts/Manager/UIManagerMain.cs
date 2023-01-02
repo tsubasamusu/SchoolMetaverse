@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 
 namespace SchoolMetaverse
 {
     /// <summary>
     /// ルーム参加後のUIを制御する
     /// </summary>
-    public class UIManagerMain : MonoBehaviour,ISetUp
+    public class UIManagerMain : MonoBehaviour, ISetUp
     {
         [SerializeField]
         private Image imgMainBackground;//メインの背景
@@ -39,10 +38,19 @@ namespace SchoolMetaverse
         private Text txtMessage;//メッセージのテキスト
 
         [SerializeField]
+        private Text txtPlayerEntered;//プレイヤーが入力したテキスト
+
+        [SerializeField]
+        private InputField inputField;//InputField
+
+        [SerializeField]
+        private CanvasGroup cgButton;//ボタンのキャンバスグループ
+
+        [SerializeField]
         private CanvasGroup cgSlider;//スライダーのキャンバスグループ
 
         [SerializeField]
-        private PictureManager pictureManager;//PictureManager
+        private CanvasGroup cgMessage;//メッセージのキャンバスグループ
 
         /// <summary>
         /// UIManagerMainの初期設定を行う
@@ -52,10 +60,45 @@ namespace SchoolMetaverse
             //メインの背景を黒色で表示する
             imgMainBackground.color = Color.black;
 
-            //全てのスライダーを非表示にする
-            cgSlider.alpha = 0f;
+            //全てのボタンを表示する
+            cgButton.alpha = 1f;
 
+            //全てのスライダーと、メッセージのキャンバスグループを非表示にする
+            cgSlider.alpha = cgMessage.alpha = 0f;
 
+            //サブの背景を非活性化する
+            imgSubBackground.gameObject.SetActive(false);
+
+            //メインの背景をフェードアウトさせる
+            imgMainBackground.DOFade(0f, ConstData.BACKGROUND_FADE_OUT_TIME)
+
+                //メインの背景を消す
+                .OnComplete(() => Destroy(imgMainBackground.gameObject));
+
+            //メッセージボタンが押された際の処理
+            btnMessage.OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    //メッセージが表示されていないなら
+                    if (cgMessage.alpha == 0f)
+                    {
+                        //メッセージのキャンバスグループを表示する
+                        cgMessage.alpha = 1f;
+
+                        //サブの背景を活性化する
+                        imgSubBackground.gameObject.SetActive(true);
+                    }
+                    //メッセージが表示されているなら
+                    else
+                    {
+                        //メッセージのキャンバスグループを非表示にする
+                        cgMessage.alpha = 0f;
+
+                        //サブの背景を非活性化する
+                        imgSubBackground.gameObject.SetActive(false);
+                    }
+                })
+                .AddTo(this);
         }
     }
 }
