@@ -29,6 +29,9 @@ namespace SchoolMetaverse
         private Button btnSetting;//設定ボタン
 
         [SerializeField]
+        private Button btnSendMessage;//メッセージ送信ボタン
+
+        [SerializeField]
         private Slider sldBgmVolume;//BGMの音量のスライダー
 
         [SerializeField]
@@ -87,6 +90,9 @@ namespace SchoolMetaverse
 
                         //サブの背景を活性化する
                         imgSubBackground.gameObject.SetActive(true);
+
+                        //InputFieldとメッセージ送信ボタンを活性化する
+                        inputField.interactable = btnSendMessage.interactable = true;
                     }
                     //メッセージが表示されているなら
                     else
@@ -96,6 +102,9 @@ namespace SchoolMetaverse
 
                         //サブの背景を非活性化する
                         imgSubBackground.gameObject.SetActive(false);
+
+                        //InputFieldとメッセージ送信ボタンを非活性化する
+                        inputField.interactable = btnSendMessage.interactable = false;
                     }
                 })
                 .AddTo(this);
