@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -176,6 +177,19 @@ namespace SchoolMetaverse
                     //メッセージのデータを更新する
                     messageManager.UpdateMessageData(inputField.text, GameData.instance.playerName);
 
+                    //メッセージ（保持用）
+                    string message = string.Empty;
+
+                    //メッセージの配列の要素数だけ繰り返す
+                    for (int i = 0; i < GameData.instance.messages.Length; i++)
+                    {
+                        //メッセージのテキストを設定する
+                        message += GameData.instance.messages[i];
+                    }
+
+                    //メッセージのテキストを設定する
+                    txtMessage.text = message;
+
                     //メッセージ入力欄を空にする
                     inputField.text = string.Empty;
                 })
@@ -183,25 +197,6 @@ namespace SchoolMetaverse
 
             //ボタンのアニメーションを行う
             void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
-        }
-
-        /// <summary>
-        /// メッセージのテキストを設定する
-        /// </summary>
-        public void SetTxtMessage()
-        {
-            //メッセージ（保持用）
-            string message = string.Empty;
-
-            //メッセージの配列の要素数だけ繰り返す
-            for (int i = 0; i < GameData.instance.messages.Length; i++)
-            {
-                //メッセージのテキストを設定する
-                message += GameData.instance.messages[i];
-            }
-
-            //メッセージのテキストを設定する
-            txtMessage.text = message;
         }
     }
 }

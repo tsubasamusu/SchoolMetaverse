@@ -3495,7 +3495,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45499ff0f7a5f2341b2f351c4a15a181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManagerMain: {fileID: 854384158}
 --- !u!1 &646028941
 GameObject:
   m_ObjectHideFlags: 0
@@ -4671,7 +4670,6 @@ MonoBehaviour:
   sldBgmVolume: {fileID: 1361284213}
   sldPictureSize: {fileID: 235635816}
   txtMessage: {fileID: 1745440393}
-  txtPlayerEntered: {fileID: 179322773}
   inputField: {fileID: 646028943}
   cgButton: {fileID: 199612180}
   cgSetting: {fileID: 1306764928}
@@ -9377,10 +9375,6 @@ MonoBehaviour:
       rid: -2
   - mode: 0
     unityReference: {fileID: 854384158}
-    rawReference:
-      rid: -2
-  - mode: 0
-    unityReference: {fileID: 633243862}
     rawReference:
       rid: -2
   references:
