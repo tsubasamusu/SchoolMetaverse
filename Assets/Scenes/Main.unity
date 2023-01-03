@@ -1029,7 +1029,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199612178}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -4655,7 +4655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgMainBackground: {fileID: 2056206248}
   imgSubBackground: {fileID: 103357338}
-  btnInternet: {fileID: 1245489115}
+  btnSendPicture: {fileID: 1245489115}
   btnMessage: {fileID: 1877726864}
   btnMute: {fileID: 1965658299}
   btnSetting: {fileID: 1976402439}
