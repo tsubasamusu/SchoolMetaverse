@@ -4699,6 +4699,7 @@ MonoBehaviour:
   cgSetting: {fileID: 1306764928}
   cgMessage: {fileID: 463675573}
   messageManager: {fileID: 633243862}
+  pictureManager: {fileID: 803585813}
 --- !u!1 &883036421
 GameObject:
   m_ObjectHideFlags: 0

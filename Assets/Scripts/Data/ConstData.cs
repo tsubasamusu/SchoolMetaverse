@@ -11,11 +11,9 @@ namespace SchoolMetaverse
 
         public const int MAX_MESSAGE_LINES = 13;//メッセージの表示可能な最大行数
 
-        public const float LOOK_SENSITIVITY_FOR_WINDOWS = 10f;//視点感度（Windows用）
+        public const float LOOK_SENSITIVITY = 1000f;//視点感度（WebGL用）
 
-        public const float LOOK_SENSITIVITY_FOR_WEBGL = 1000f;//視点感度（WebGL用）
-
-        public const float LOOK_SMOOTH_FOR_WEBGL = 0.1f;//視点の滑らかさ（WebGL用）
+        public const float LOOK_SMOOTH = 0.1f;//視点の滑らかさ（WebGL用）
 
         public const float MAX_CUSOR_LENGTH_FROM_CENTER = 20f;//マウスカーソルの中央からの最大値
 
@@ -38,7 +36,5 @@ namespace SchoolMetaverse
         public const KeyCode WALK_B_KEY = KeyCode.DownArrow;//後ろへ進むキー
 
         public const KeyCode WALK_L_KEY = KeyCode.LeftArrow;//左へ進むキー
-
-        public const KeyCode VIEWPOINT_MOVE_KEY = KeyCode.Mouse1;//視点移動キー
     }
 }

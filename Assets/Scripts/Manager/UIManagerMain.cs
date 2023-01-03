@@ -56,6 +56,9 @@ namespace SchoolMetaverse
         [SerializeField]
         private MessageManager messageManager;//MessageManager
 
+        [SerializeField]
+        private PictureManager pictureManager;//PictureManager
+
         /// <summary>
         /// InputField（取得用）
         /// </summary>
@@ -178,6 +181,12 @@ namespace SchoolMetaverse
             btnSendMessage.OnClickAsObservable()
                 .Where(_ => inputField.text != string.Empty)
                 .Subscribe(_ => { messageManager.PrepareSendMessage(GameData.instance.playerName, inputField.text); })
+                .AddTo(this);
+
+            //画像送信ボタンを押された際の処理
+            btnPicture.OnClickAsObservable()
+                .Where(_ => !pictureManager.IsChoosingPicture)
+                .Subscribe(_ => pictureManager.GetAndDisplayPicture())
                 .AddTo(this);
 
             //ボタンのアニメーションを行う
