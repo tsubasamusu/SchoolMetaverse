@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
+using System;
 
 namespace SchoolMetaverse
 {
@@ -14,9 +15,6 @@ namespace SchoolMetaverse
     {
         [SerializeField]
         private Text txtPlaceholder;//スペースホルダのテキスト
-
-        [SerializeField]
-        private Text txtPlayerEntered;//プレイヤーが入力したテキスト
 
         [SerializeField]
         private Button btnMain;//メインボタン
@@ -35,32 +33,53 @@ namespace SchoolMetaverse
         /// </summary>
         private void Start()
         {
+            //今、名前を入力する場面かどうか
+            bool isEnterNameScene = false;
+
             //スペースホルダのテキストを設定する
             txtPlaceholder.text = "パスコードを入力...";
 
-            //SingleAssignmentDisposableを作成する
-            var disposable = new SingleAssignmentDisposable();
+            btnMain.OnClickAsObservable()
+            .Subscribe(_ =>
+            {
+                //名前を入力する場面なら、以降の処理を行わない
+                if (isEnterNameScene) return;
 
-            //メインボタンを押された際の処理
-            disposable.Disposable = btnMain.OnClickAsObservable()
-                .Where(_ => txtPlayerEntered.text == ConstData.PASSCODE)
-                .Subscribe(_ =>
+                //入力されたパスコードが正しくないなら
+                if (inputField.text != ConstData.PASSCODE)
                 {
-                    //名前を入力する場面に移る
-                    GoToEnterNameScene();
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
 
-                    //購読を停止する
-                    disposable.Dispose();
-                });
+                    //以降の処理を行わない
+                    return;
+                }
+
+                //効果音を再生する
+                SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
+
+                //名前を入力する場面に移る
+                GoToEnterNameScene();
+            });
 
             //サブボタンを押された際の処理
             btnSub.OnClickAsObservable()
-                .Subscribe(_ => GoToEnterNameScene())
+                .Subscribe(_ =>
+                {
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
+
+                    //名前を入力する場面に遷移する
+                    GoToEnterNameScene();
+                })
                 .AddTo(btnSub);
 
             //名前を入力する場面に移る
             void GoToEnterNameScene()
             {
+                //名前を入力する場面に遷移した状態に切り替える
+                isEnterNameScene = true;
+
                 //サブボタンを消す
                 Destroy(btnSub.gameObject);
 
@@ -72,11 +91,23 @@ namespace SchoolMetaverse
 
                 //メインボタンが押された際の処理
                 btnMain.OnClickAsObservable()
-                    .Where(_ => txtPlayerEntered.text != string.Empty)
                     .Subscribe(_ =>
                     {
+                        //名前が入力されていないなら
+                        if (inputField.text == string.Empty)
+                        {
+                            //効果音を再生する
+                            SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                            //以降の処理を行わない
+                            return;
+                        }
+
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
+
                         //プレイヤーの名前を取得する
-                        GameData.instance.playerName = txtPlayerEntered.text;
+                        GameData.instance.playerName = inputField.text;
 
                         //プレイヤーの名前をデバイスに保存する
                         GameData.instance.SavePlayerNameInDevice();

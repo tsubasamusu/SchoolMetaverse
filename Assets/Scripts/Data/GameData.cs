@@ -14,6 +14,9 @@ namespace SchoolMetaverse
         public float lookSensitivity = 5f;//視点感度（0～10）
 
         [HideInInspector]
+        public float bgmVolume = 1f;//BGMの音量
+
+        [HideInInspector]
         public string[] messages = new string[ConstData.MAX_MESSAGE_LINES];//メッセージの配列
 
         public static GameData instance;//インスタンス
