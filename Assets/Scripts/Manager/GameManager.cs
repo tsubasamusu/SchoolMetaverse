@@ -8,9 +8,6 @@ namespace SchoolMetaverse
     public class GameManager : MonoBehaviourPunCallbacks
     {
         [SerializeField]
-        private PictureManager pictureManager;//PictureManager
-
-        [SerializeField]
         private Transform spawnTran;//スポーン地点
 
         [SerializeField]

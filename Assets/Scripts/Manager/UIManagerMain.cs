@@ -18,7 +18,7 @@ namespace SchoolMetaverse
         private Image imgSubBackground;//サブの背景
 
         [SerializeField]
-        private Button btnPicture;//画像送信ボタン
+        private Button btnInternet;//インターネットボタン
 
         [SerializeField]
         private Button btnMessage;//メッセージボタン
@@ -55,9 +55,6 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private MessageManager messageManager;//MessageManager
-
-        [SerializeField]
-        private PictureManager pictureManager;//PictureManager
 
         /// <summary>
         /// InputField（取得用）
@@ -183,10 +180,9 @@ namespace SchoolMetaverse
                 .Subscribe(_ => { messageManager.PrepareSendMessage(GameData.instance.playerName, inputField.text); })
                 .AddTo(this);
 
-            //画像送信ボタンを押された際の処理
-            btnPicture.OnClickAsObservable()
-                .Where(_ => !pictureManager.IsChoosingPicture)
-                .Subscribe(_ => pictureManager.LaunchExternalProsess())
+            //インターネットボタンを押された際の処理
+            btnInternet.OnClickAsObservable()
+                .Subscribe(_ => Application.OpenURL(ConstData.INTERNET_URL))
                 .AddTo(this);
 
             //ボタンのアニメーションを行う

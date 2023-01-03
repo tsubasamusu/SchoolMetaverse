@@ -3482,7 +3482,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 657647277}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &633243862
 MonoBehaviour:
@@ -3709,7 +3709,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 854384157}
-  - {fileID: 803585814}
   - {fileID: 1935982149}
   - {fileID: 633243861}
   m_Father: {fileID: 0}
@@ -4278,50 +4277,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &803585812
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 803585814}
-  - component: {fileID: 803585813}
-  m_Layer: 0
-  m_Name: PictureManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &803585813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 803585812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83250e73571633d4ca4bdd8746120c5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &803585814
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 803585812}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 657647277}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &810630551
 GameObject:
   m_ObjectHideFlags: 0
@@ -4700,7 +4655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgMainBackground: {fileID: 2056206248}
   imgSubBackground: {fileID: 103357338}
-  btnPicture: {fileID: 1245489115}
+  btnInternet: {fileID: 1245489115}
   btnMessage: {fileID: 1877726864}
   btnMute: {fileID: 1965658299}
   btnSetting: {fileID: 1976402439}
@@ -4713,7 +4668,6 @@ MonoBehaviour:
   cgSetting: {fileID: 1306764928}
   cgMessage: {fileID: 463675573}
   messageManager: {fileID: 633243862}
-  pictureManager: {fileID: 803585813}
 --- !u!1 &883036421
 GameObject:
   m_ObjectHideFlags: 0
@@ -6608,7 +6562,7 @@ GameObject:
   - component: {fileID: 1245489116}
   - component: {fileID: 1245489115}
   m_Layer: 5
-  m_Name: btnPicture
+  m_Name: btnInternet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6698,7 +6652,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 90ace655cde26ac4fafd79d6165659f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 842182b9ce417c84ea480f6c7540ec84, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9391,7 +9345,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 657647277}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1935982150
 MonoBehaviour:
@@ -9405,7 +9359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a24751653fe49d43a5bbcbdb98b2d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pictureManager: {fileID: 803585813}
+  pictureManager: {fileID: 0}
   spawnTran: {fileID: 1160912645}
   setUpList:
   - mode: 0
