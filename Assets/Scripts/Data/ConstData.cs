@@ -11,8 +11,6 @@ namespace SchoolMetaverse
 
         public const int MAX_MESSAGE_LINES = 13;//メッセージの表示可能な最大行数
 
-        public const float LOOK_SENSITIVITY = 5f;//視点感度
-
         public const float LOOK_SMOOTH = 0.1f;//視点の滑らかさ
 
         public const float MAX_CUSOR_LENGTH_FROM_CENTER = 20f;//マウスカーソルの中央からの最大値

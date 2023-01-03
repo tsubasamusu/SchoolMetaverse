@@ -1016,9 +1016,9 @@ RectTransform:
   m_Father: {fileID: 344052491}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -500}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &199612180
@@ -1029,7 +1029,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199612178}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1127,7 +1127,7 @@ GameObject:
   - component: {fileID: 235635815}
   - component: {fileID: 235635816}
   m_Layer: 5
-  m_Name: sldPictureSize
+  m_Name: sldLookSensitivity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4661,7 +4661,7 @@ MonoBehaviour:
   btnSetting: {fileID: 1976402439}
   btnSendMessage: {fileID: 398619183}
   sldBgmVolume: {fileID: 1361284213}
-  sldPictureSize: {fileID: 235635816}
+  sldLookSensitivity: {fileID: 235635816}
   txtMessage: {fileID: 1745440393}
   inputField: {fileID: 646028943}
   cgButton: {fileID: 199612180}
@@ -6741,7 +6741,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u753B\u50CF\u306E\u30B5\u30A4\u30BA"
+  m_Text: "\u8996\u70B9\u611F\u5EA6"
 --- !u!222 &1250915138
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9359,7 +9359,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a24751653fe49d43a5bbcbdb98b2d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pictureManager: {fileID: 0}
   spawnTran: {fileID: 1160912645}
   setUpList:
   - mode: 0

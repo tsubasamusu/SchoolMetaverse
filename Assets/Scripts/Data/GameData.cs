@@ -11,6 +11,9 @@ namespace SchoolMetaverse
         public string playerName;//プレイヤーの名前
 
         [HideInInspector]
+        public float lookSensitivity;//視点感度（0～10）
+
+        [HideInInspector]
         public string[] messages = new string[ConstData.MAX_MESSAGE_LINES];//メッセージの配列
 
         public static GameData instance;//インスタンス
@@ -25,13 +28,19 @@ namespace SchoolMetaverse
         /// </summary>
         private void Start()
         {
-            //プレイヤーの名前が既に保存されているなら、それを取得する
+            //デバイスに保存されているデータを取得する
             if (PlayerPrefs.HasKey("PlayerName")) playerName = PlayerPrefs.GetString("PlayerName");
+            if (PlayerPrefs.HasKey("LookSensitivity")) lookSensitivity = PlayerPrefs.GetFloat("LookSensitivity");
         }
 
         /// <summary>
         /// デバイスにプレイヤーの名前を保存する
         /// </summary>
         public void SavePlayerNameInDevice() { PlayerPrefs.SetString("PlayerName", playerName); }
+
+        /// <summary>
+        /// デバイスに視点感度を保存する
+        /// </summary>
+        public void SavelookSensitivityInDevice() { PlayerPrefs.SetFloat("LookSensitivity",lookSensitivity); }
     }
 }

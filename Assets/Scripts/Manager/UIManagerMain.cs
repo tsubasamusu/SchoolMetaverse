@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Photon.Pun;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +8,7 @@ namespace SchoolMetaverse
     /// <summary>
     /// ルーム参加後のUIを制御する
     /// </summary>
-    public class UIManagerMain : MonoBehaviourPunCallbacks, ISetUp
+    public class UIManagerMain : MonoBehaviour, ISetUp
     {
         [SerializeField]
         private Image imgMainBackground;//メインの背景
@@ -36,7 +35,7 @@ namespace SchoolMetaverse
         private Slider sldBgmVolume;//BGMの音量のスライダー
 
         [SerializeField]
-        private Slider sldPictureSize;//画像のサイズのスライダー
+        private Slider sldLookSensitivity;//視点感度のスライダー
 
         [SerializeField]
         private Text txtMessage;//メッセージのテキスト
@@ -156,8 +155,11 @@ namespace SchoolMetaverse
                         //サブの背景を活性化する
                         imgSubBackground.gameObject.SetActive(true);
 
-                        //BGMの音量のスライダーと、画像のサイズのスライダーを活性化する
-                        sldBgmVolume.interactable = sldPictureSize.interactable = true;
+                        //BGMの音量のスライダーと、視点感度のスライダーを活性化する
+                        sldBgmVolume.interactable = sldLookSensitivity.interactable = true;
+
+                        //視点感度のスライダーの初期値を設定する
+                        sldLookSensitivity.value = GameData.instance.lookSensitivity / 10f;
                     }
                     //設定が表示されているなら
                     else
@@ -168,8 +170,14 @@ namespace SchoolMetaverse
                         //サブの背景を非活性化する
                         imgSubBackground.gameObject.SetActive(false);
 
-                        //BGMの音量のスライダーと、画像のサイズのスライダーを非活性化する
-                        sldBgmVolume.interactable = sldPictureSize.interactable = false;
+                        //BGMの音量のスライダーと、視点感度のスライダーを非活性化する
+                        sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
+
+                        //設定された視点感度を取得する
+                        GameData.instance.lookSensitivity= sldLookSensitivity.value * 10f;
+
+                        //設定された視点感度をデバイスに保存する
+                        GameData.instance.SavelookSensitivityInDevice();
                     }
                 })
                 .AddTo(this);
