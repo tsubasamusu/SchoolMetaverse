@@ -11,7 +11,7 @@ namespace SchoolMetaverse
         public string playerName;//プレイヤーの名前
 
         [HideInInspector]
-        public float lookSensitivity;//視点感度（0～10）
+        public float lookSensitivity = 5f;//視点感度（0～10）
 
         [HideInInspector]
         public string[] messages = new string[ConstData.MAX_MESSAGE_LINES];//メッセージの配列
@@ -41,6 +41,6 @@ namespace SchoolMetaverse
         /// <summary>
         /// デバイスに視点感度を保存する
         /// </summary>
-        public void SavelookSensitivityInDevice() { PlayerPrefs.SetFloat("LookSensitivity",lookSensitivity); }
+        public void SavelookSensitivityInDevice() { PlayerPrefs.SetFloat("LookSensitivity", lookSensitivity); }
     }
 }
