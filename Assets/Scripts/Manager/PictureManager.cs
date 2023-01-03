@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace SchoolMetaverse
     {
         private bool isChoosingPicture;//画像選択中かどうか
 
-        private Process exProcess;//起動する外部プロセス
+        private Process process;//プロセス
 
         /// <summary>
         /// 画像選択中かどうか（取得用）
@@ -18,45 +19,52 @@ namespace SchoolMetaverse
         public bool IsChoosingPicture { get => isChoosingPicture; }
 
         /// <summary>
-        /// 画像を取得し、表示する
+        /// 外部プロセスを実行する
         /// </summary>
-        public void GetAndDisplayPicture()
+        public void LaunchExternalProsess()
         {
-            //画像選択中に変更する
-            isChoosingPicture= true;
+            //プロセスを作成する
+            process = new Process
+            {
+                // ロセスを起動するときに使用する値のセットを指定する
+                StartInfo = new ProcessStartInfo
+                {
+                    //起動するファイルのパスを指定する
+                    FileName = Application.dataPath + "/Plugins/GetPictureData.exe",
 
-            //パスを取得する
-            string path = Application.dataPath + "/Plugins/GetPictureData.exe";
+                    //プロセスの起動にOSのシェルを使用しないように設定する
+                    UseShellExecute = false,
 
-            //外部プロセスをインスタンス化する
-            exProcess = new Process();
+                    //StandardInputから入力を読み取るように設定する
+                    RedirectStandardInput = true,
 
-            //パスを登録する
-            exProcess.StartInfo.FileName = exProcess.StartInfo.Arguments = path;
+                    //出力をStandardOutputに書き込むように設定する
+                    RedirectStandardOutput = true,
+                },
+                //外部プロセスの終了を検知する
+                EnableRaisingEvents = true
+            };
+            //メソッドを登録する
+            process.Exited += OnEndedProcess;
 
-            //外部プロセスの終了を検知してイベントを発生させる
-            exProcess.EnableRaisingEvents = true;
-            exProcess.Exited += OnProcessExited;
-
-            //外部プロセスを実行する
-            exProcess.Start();
+            //外部プロセスを起動する
+            process.Start();
+            process.BeginOutputReadLine();
         }
 
         /// <summary>
         /// 外部プロセスが終了した際に呼び出される
         /// </summary>
-        /// <param name="sender">送信者</param>
-        /// <param name="eventArgs">EventArgs</param>
-        private void OnProcessExited(object sender, System.EventArgs eventArgs)
+        private void OnEndedProcess(object sender, EventArgs e)
         {
-            //ウィンドウを閉じる
-            exProcess.CloseMainWindow();
+            //外部プロセスを取得できていないか、外部プロセスが実行中なら、以降の処理を行わない
+            if (process == null || process.HasExited) return;
 
-            //外部プロセスを処分する
-            exProcess.Dispose();
-
-            //画像の選択をしていない状態に切り替える
-            isChoosingPicture= false;
+            //外部プロセスを終了する
+            process.StandardInput.Close();
+            process.CloseMainWindow();
+            process.Dispose();
+            process = null;
         }
     }
 }

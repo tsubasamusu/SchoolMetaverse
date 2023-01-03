@@ -186,7 +186,7 @@ namespace SchoolMetaverse
             //画像送信ボタンを押された際の処理
             btnPicture.OnClickAsObservable()
                 .Where(_ => !pictureManager.IsChoosingPicture)
-                .Subscribe(_ => pictureManager.GetAndDisplayPicture())
+                .Subscribe(_ => pictureManager.LaunchExternalProsess())
                 .AddTo(this);
 
             //ボタンのアニメーションを行う
