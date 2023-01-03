@@ -26,7 +26,7 @@ namespace SchoolMetaverse
             isChoosingPicture= true;
 
             //パスを取得する
-            string path = Application.dataPath + "/Plugins/GetPicture.exe";
+            string path = Application.dataPath + "/Plugins/GetPictureData.exe";
 
             //外部プロセスをインスタンス化する
             exProcess = new Process();

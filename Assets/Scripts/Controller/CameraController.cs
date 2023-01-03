@@ -30,8 +30,8 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //マウス移動を取得する
-                    mousePos.y += Input.GetAxis("Mouse X") * ConstData.LOOK_SENSITIVITY * Time.deltaTime;
-                    mousePos.x -= Input.GetAxis("Mouse Y") * ConstData.LOOK_SENSITIVITY * Time.deltaTime;
+                    mousePos.y += Input.GetAxis("Mouse X") * ConstData.LOOK_SENSITIVITY;
+                    mousePos.x -= Input.GetAxis("Mouse Y") * ConstData.LOOK_SENSITIVITY;
 
                     //滑らかに値を更新する
                     cameraAngle.x = Mathf.SmoothDamp(cameraAngle.x, mousePos.x, ref xRotVelocity, ConstData.LOOK_SMOOTH);
