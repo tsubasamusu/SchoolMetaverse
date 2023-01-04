@@ -9,13 +9,26 @@ namespace SchoolMetaverse
     /// 画像に関する処理を行う
     /// </summary>
     [RequireComponent(typeof(PhotonView))]
-    public class PictureManager : MonoBehaviourPunCallbacks
+    public class PictureManager : MonoBehaviourPunCallbacks,ISetUp
     {
         [SerializeField]
         private UIManagerMain uiManagerMain;//UIManagerMain
 
         [SerializeField]
         private MessageManager messageManager;//MessageManager
+
+        /// <summary>
+        /// PictureManagerの初期設定を行う
+        /// </summary>
+        public void SetUp()
+        {
+            //既に他のプレイヤーが画像を表示しているなら
+            if (PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"] is byte[] bytes)
+            {
+                //バイナリデータから画像を黒板に設置する
+                SetPictureFromBytes(bytes);
+            }
+        }
 
         /// <summary>
         /// 画像を送信する準備を行う
@@ -51,6 +64,16 @@ namespace SchoolMetaverse
             //イメージをバイナリデータに変換する
             byte[] bytes = (byte[])imageConverter.ConvertTo(imgPicture, typeof(byte[]));
 
+            //バイナリデータから画像を黒板に設置する
+            SetPictureFromBytes(bytes);
+        }
+
+        /// <summary>
+        /// バイナリデータから画像を黒板に設置する
+        /// </summary>
+        /// <param name="bytes">バイナリデータ</param>
+        private void SetPictureFromBytes(byte[] bytes)
+        {
             //Texture2Dを作成する
             Texture2D texture = new(1, 1);
 
@@ -66,6 +89,16 @@ namespace SchoolMetaverse
 
             //スプライトを作成する
             Sprite sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), Vector2.zero);
+
+            //Hashtableを作成する
+            var hashtable = new ExitGames.Client.Photon.Hashtable
+            {
+                //ゲームサーバーに画像のバイナリデータを持たせる
+                ["PictureBites"] = bytes
+            };
+
+            //作成したカスタムプロパティを持たせる
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
             //黒板のスプライトを設定する
             uiManagerMain.SetImgBlackBordSprite(sprite, texture.width, texture.height);

@@ -10707,6 +10707,10 @@ MonoBehaviour:
     unityReference: {fileID: 854384158}
     rawReference:
       rid: -2
+  - mode: 0
+    unityReference: {fileID: 1332576727}
+    rawReference:
+      rid: -2
   references:
     version: 2
     RefIds:
