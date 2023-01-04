@@ -73,6 +73,11 @@ namespace SchoolMetaverse
         public InputField IfMessage { get => ifMessage; }
 
         /// <summary>
+        /// 画像のパス入力用のインプットフィールド（取得用）
+        /// </summary>
+        public InputField IfPicturePath { get => ifPicturePath; }
+
+        /// <summary>
         /// UIManagerMainの初期設定を行う
         /// </summary>
         public void SetUp()
