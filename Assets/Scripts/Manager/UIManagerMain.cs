@@ -32,6 +32,9 @@ namespace SchoolMetaverse
         private Button btnSendMessage;//メッセージ送信ボタン
 
         [SerializeField]
+        private Button btnPicturePath;//画像のパスの完了ボタン
+
+        [SerializeField]
         private Slider sldBgmVolume;//BGMの音量のスライダー
 
         [SerializeField]
@@ -41,7 +44,10 @@ namespace SchoolMetaverse
         private Text txtMessage;//メッセージのテキスト
 
         [SerializeField]
-        private InputField inputField;//InputField
+        private InputField ifMessage;//メッセージ入力用のインプットフィールド
+
+        [SerializeField]
+        private InputField ifPicturePath;//画像のパス入力用のインプットフィールド
 
         [SerializeField]
         private CanvasGroup cgButton;//ボタンのキャンバスグループ
@@ -53,12 +59,18 @@ namespace SchoolMetaverse
         private CanvasGroup cgMessage;//メッセージのキャンバスグループ
 
         [SerializeField]
+        private CanvasGroup cgSendPicture;//画像送信用のキャンバスグループ
+
+        [SerializeField]
         private MessageManager messageManager;//MessageManager
 
+        [SerializeField]
+        private PictureManager pictureManager;//PictureManager
+
         /// <summary>
-        /// InputField（取得用）
+        /// メッセージ入力用のインプットフィールド（取得用）
         /// </summary>
-        public InputField InputField { get => inputField; }
+        public InputField IfMessage { get => ifMessage; }
 
         /// <summary>
         /// UIManagerMainの初期設定を行う
@@ -117,10 +129,10 @@ namespace SchoolMetaverse
                         imgSubBackground.gameObject.SetActive(true);
 
                         //InputFieldとメッセージ送信ボタンを活性化する
-                        inputField.interactable = btnSendMessage.interactable = true;
+                        ifMessage.interactable = btnSendMessage.interactable = true;
 
                         //メッセージ入力欄を空にする
-                        inputField.text = string.Empty;
+                        ifMessage.text = string.Empty;
                     }
                     //メッセージが表示されているなら
                     else
@@ -132,7 +144,7 @@ namespace SchoolMetaverse
                         imgSubBackground.gameObject.SetActive(false);
 
                         //InputFieldとメッセージ送信ボタンを非活性化する
-                        inputField.interactable = btnSendMessage.interactable = false;
+                        ifMessage.interactable = btnSendMessage.interactable = false;
                     }
                 })
                 .AddTo(this);
@@ -211,7 +223,7 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //メッセージが入力されていないなら
-                    if(inputField.text == string.Empty)
+                    if(ifMessage.text == string.Empty)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
@@ -224,13 +236,17 @@ namespace SchoolMetaverse
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.メッセージ送信ボタンを押した時の音);
 
                     //メッセージ送信の準備を行う
-                    messageManager.PrepareSendMessage(GameData.instance.playerName, inputField.text);
+                    messageManager.PrepareSendMessage(GameData.instance.playerName, ifMessage.text);
                 })
                 .AddTo(this);
 
             //画像送信ボタンを押された際の処理
             btnSendPicture.OnClickAsObservable()
-                .Subscribe(_ => Application.OpenURL(ConstData.SEND_PICTURE_URL))
+                .Subscribe(_ =>
+                {
+                    //if()
+                    pictureManager.GetPictureData();
+                })
                 .AddTo(this);
 
             //ボタンのアニメーションを行う
@@ -256,7 +272,7 @@ namespace SchoolMetaverse
             txtMessage.text = message;
 
             //メッセージ入力欄を空にする
-            inputField.text = string.Empty;
+            ifMessage.text = string.Empty;
         }
     }
 }

@@ -27,8 +27,6 @@ namespace SchoolMetaverse
 
         public const string PASSCODE = "0308";//パスコード
 
-        public const string SEND_PICTURE_URL = "https://www.google.co.jp/";//画像送信用のURL
-
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
 
         public const KeyCode WALK_R_KEY = KeyCode.RightArrow;//右へ進むキー
