@@ -1,4 +1,6 @@
+using System.Data.SqlTypes;
 using System.Drawing;
+using System.IO;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -23,20 +25,21 @@ namespace SchoolMetaverse
         public void SendPicture()
         {
             //入力された画像のパスを取得する
-            string picturePath = uiManagerMain.IfPicturePath.text;
+            string picturePath = string.Empty;//"C:/Users/Hashimoto/Pictures/ゲーム素材/ゲージ/IMG_4472.png";
+
+            //イメージ（保持用）
+            Image imgPicture = null;
 
             //イメージを取得する
-            Image imgPicture = Image.FromFile(picturePath);
+            try{imgPicture = Image.FromFile(picturePath);}
 
-            //イメージを取得できなかったら
-            if (imgPicture == null)
+            //ファイルが見つからなかったら
+            catch(FileNotFoundException)
             {
                 //メッセージを送信する
                 messageManager.PrepareSendMessage("Bot", "正しい画像のパスを入力してください。");
-
-                //以降の処理を行わない
-                return;
             }
+
             //ImageConverterを作成する
             ImageConverter imageConverter = new();
 

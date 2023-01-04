@@ -32,7 +32,7 @@ namespace SchoolMetaverse
         private Button btnSendMessage;//メッセージ送信ボタン
 
         [SerializeField]
-        private Button btnPicturePath;//画像のパスの完了ボタン
+        private Button btnPicturePath;//画像のパスの入力完了ボタン
 
         [SerializeField]
         private Slider sldBgmVolume;//BGMの音量のスライダー
@@ -289,10 +289,35 @@ namespace SchoolMetaverse
                     }
 
                     //効果音を再生する
-                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.メッセージ送信ボタンを押した時の音);
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.送信ボタンを押した時の音);
 
                     //メッセージ送信の準備を行う
                     messageManager.PrepareSendMessage(GameData.instance.playerName, ifMessage.text);
+                })
+                .AddTo(this);
+
+            //画像のパスの入力完了ボタンを押された際の処理
+            btnPicturePath.OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    //画像のパスが入力されていないなら
+                    if (ifPicturePath.text == string.Empty)
+                    {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.送信ボタンを押した時の音);
+
+                    //画像を送信する
+                    pictureManager.SendPicture();
+
+                    //プレイヤーが入力したテキストを空にする
+                    ifPicturePath.text = string.Empty;
                 })
                 .AddTo(this);
 
