@@ -25,6 +25,8 @@ namespace SchoolMetaverse
 
         public const float BUTTON_ANIMATION_SIZE = 1.3f;//ボタンのアニメーションのサイズ
 
+        public const float PICTURE_SIZE_RATIO = 2f;//画像のサイズの調節用変数
+
         public const string PASSCODE = "0308";//パスコード
 
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー

@@ -1,5 +1,4 @@
 using DG.Tweening;
-using System;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -82,11 +81,6 @@ namespace SchoolMetaverse
         /// メッセージ入力用のインプットフィールド（取得用）
         /// </summary>
         public InputField IfMessage { get => ifMessage; }
-
-        /// <summary>
-        /// 画像のパス入力用のインプットフィールド（取得用）
-        /// </summary>
-        public InputField IfPicturePath { get => ifPicturePath; }
 
         /// <summary>
         /// UIManagerMainの初期設定を行う
@@ -287,7 +281,7 @@ namespace SchoolMetaverse
                             .Subscribe(_ =>
                             {
                                 //入力されたサイズを取得する
-                                float scale = 10f * sldPictureSize.value;
+                                float scale = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
 
                                 //黒板のサイズを変更する
                                 rtBlackBord.localScale = new Vector3(scale, scale, scale);
@@ -364,8 +358,8 @@ namespace SchoolMetaverse
                     //効果音を再生する
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.送信ボタンを押した時の音);
 
-                    //画像を送信する
-                    pictureManager.SendPicture();
+                    //画像を送信する準備を行う
+                    pictureManager.PrepareSendPicture(ifPicturePath.text);
 
                     //プレイヤーが入力したテキストを空にする
                     ifPicturePath.text = string.Empty;
