@@ -10,6 +10,8 @@ namespace SchoolMetaverse
         [SerializeField]
         private SoundDataSO soundDataSO;//SoundDataSO
 
+        private AudioSource audBgmPlayer;//BGM再生用のAudioSource
+
         private AudioSource[] audioSources;//音再生用のAudioSourceの配列 
 
         public static SoundManager instance;//インスタンス  
@@ -24,6 +26,9 @@ namespace SchoolMetaverse
         /// </summary>
         private void Start()
         {
+            //BGM再生用のAudioSourceを取得する
+            audBgmPlayer = transform.GetChild(0).GetComponent<AudioSource>();
+
             //音再生用のAudioSourceの配列の要素数を設定する
             audioSources = new AudioSource[soundDataSO.soundDataList.Count];
 
@@ -40,20 +45,35 @@ namespace SchoolMetaverse
         /// </summary> 
         /// <param name="name">音の名前</param> 
         /// <returns>音のクリップ</returns> 
-        public AudioClip GetAudioClip(SoundDataSO.SoundName name)
-        {
-            //音のクリップを返す 
-            return soundDataSO.soundDataList.Find(x => x.name == name).clip;
-        }
+        public AudioClip GetAudioClip(SoundDataSO.SoundName name) { return soundDataSO.soundDataList.Find(x => x.name == name).clip; }
 
         /// <summary>  
         /// 音を再生する  
         /// </summary>  
-        /// <param name="name">音の名前</param>  
-        /// <param name="volume">音のボリューム</param>  
-        /// <param name="loop">繰り返すかどうか</param>  
-        public void PlaySound(SoundDataSO.SoundName name, float volume = 1f, bool loop = false)
+        /// <param name="name">音の名前</param>   
+        /// <param name="isBgm">BGMどうか</param>  
+        /// <param name="volume">音のボリューム</param> 
+        public void PlaySound(SoundDataSO.SoundName name, bool isBgm = false, float volume = 1f)
         {
+            //再生する音がBGMなら
+            if (isBgm)
+            {
+                //BGMのクリップを登録する
+                audBgmPlayer.clip = GetAudioClip(name);
+
+                //BGMの音量を設定する
+                audBgmPlayer.volume = volume;
+
+                //繰り返す
+                audBgmPlayer.loop = true;
+
+                //BGMを再生する
+                audBgmPlayer.Play();
+
+                //以降の処理を行わない
+                return;
+            }
+
             //音再生用のAudioSourceの配列の要素を1つずつ取り出す  
             foreach (AudioSource source in audioSources)
             {
@@ -66,9 +86,6 @@ namespace SchoolMetaverse
                     //音のボリュームを設定する  
                     source.volume = volume;
 
-                    //繰り返すかどうかを設定する 
-                    source.loop = loop;
-
                     //音を再生する  
                     source.Play();
 
@@ -77,5 +94,10 @@ namespace SchoolMetaverse
                 }
             }
         }
+
+        /// <summary>
+        /// BGmの音量を更新する
+        /// </summary>
+        public void UpdateBgmVolume() { audBgmPlayer.volume = GameData.instance.bgmVolume; }
     }
 }

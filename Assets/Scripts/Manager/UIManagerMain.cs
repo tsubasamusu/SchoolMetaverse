@@ -172,6 +172,9 @@ namespace SchoolMetaverse
 
                         //視点感度のスライダーの初期値を設定する
                         sldLookSensitivity.value = GameData.instance.lookSensitivity / 10f;
+
+                        //BGMの音量のスライダーの初期値を設定する
+                        sldBgmVolume.value = GameData.instance.bgmVolume;
                     }
                     //設定が表示されているなら
                     else
@@ -196,6 +199,9 @@ namespace SchoolMetaverse
 
                         //設定されたBGMの音量をデバイスに保存する
                         GameData.instance.SaveBgmVolumeInDevice();
+
+                        //BGMの音量を更新する
+                        SoundManager.instance.UpdateBgmVolume();
                     }
                 })
                 .AddTo(this);

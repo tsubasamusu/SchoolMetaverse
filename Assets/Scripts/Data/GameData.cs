@@ -34,7 +34,7 @@ namespace SchoolMetaverse
             //デバイスに保存されているデータを取得する
             if (PlayerPrefs.HasKey("PlayerName")) playerName = PlayerPrefs.GetString("PlayerName");
             if (PlayerPrefs.HasKey("LookSensitivity")) lookSensitivity = PlayerPrefs.GetFloat("LookSensitivity");
-            if (PlayerPrefs.HasKey("BgmVolume")) lookSensitivity = PlayerPrefs.GetFloat("BgmVolume");
+            if (PlayerPrefs.HasKey("BgmVolume")) bgmVolume = PlayerPrefs.GetFloat("BgmVolume");
         }
 
         /// <summary>

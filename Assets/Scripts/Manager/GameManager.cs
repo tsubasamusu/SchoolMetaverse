@@ -32,7 +32,7 @@ namespace SchoolMetaverse
             Camera.main.transform.localPosition = new(0f, ConstData.CAMERA_HEIGHT, 0f);
 
             //BGMを再生する
-            SoundManager.instance.PlaySound(SoundDataSO.SoundName.BGM, GameData.instance.bgmVolume, true);
+            SoundManager.instance.PlaySound(SoundDataSO.SoundName.BGM,true, GameData.instance.bgmVolume);
 
             //各クラスの初期設定を行う
             for (int i = 0; i < setUpList.Count; i++) { setUpList[i].Value.SetUp(); }
