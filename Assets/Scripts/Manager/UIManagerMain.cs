@@ -17,6 +17,9 @@ namespace SchoolMetaverse
         private Image imgSubBackground;//サブの背景
 
         [SerializeField]
+        private Image imgBlackBord;//黒板のイメージ
+
+        [SerializeField]
         private Button btnSendPicture;//画像送信ボタン
 
         [SerializeField]
@@ -39,6 +42,9 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private Slider sldLookSensitivity;//視点感度のスライダー
+
+        [SerializeField]
+        private Slider sldPictureSize;//画像のサイズのスライダー
 
         [SerializeField]
         private Text txtMessage;//メッセージのテキスト
@@ -66,6 +72,9 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private PictureManager pictureManager;//PictureManager
+
+        [SerializeField]
+        private RectTransform rtBlackBord;//黒板のRectTransform
 
         /// <summary>
         /// メッセージ入力用のインプットフィールド（取得用）
@@ -97,6 +106,9 @@ namespace SchoolMetaverse
             //サブの背景を非活性化する
             imgSubBackground.gameObject.SetActive(false);
 
+            //黒板を非活性化する
+            imgBlackBord.gameObject.SetActive(false);
+
             //メインの背景をフェードアウトさせる
             imgMainBackground.DOFade(0f, ConstData.BACKGROUND_FADE_OUT_TIME)
 
@@ -109,7 +121,7 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //他の画面が表示されているなら
-                    if (cgSetting.alpha != 0f||cgSendPicture.alpha!=0f)
+                    if (cgSetting.alpha != 0f || cgSendPicture.alpha != 0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
@@ -160,7 +172,7 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //他の画面が表示されているなら
-                    if (cgMessage.alpha != 0f||cgSendPicture.alpha!=0f)
+                    if (cgMessage.alpha != 0f || cgSendPicture.alpha != 0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
@@ -209,7 +221,7 @@ namespace SchoolMetaverse
                         GameData.instance.lookSensitivity = sldLookSensitivity.value * 10f;
 
                         //設定されたBGMの音量を取得する
-                        GameData.instance.bgmVolume=sldBgmVolume.value;
+                        GameData.instance.bgmVolume = sldBgmVolume.value;
 
                         //設定された視点感度をデバイスに保存する
                         GameData.instance.SavelookSensitivityInDevice();
@@ -256,6 +268,15 @@ namespace SchoolMetaverse
                         //InputFieldと画像送信ボタンを活性化する
                         ifPicturePath.interactable = btnPicturePath.interactable = true;
 
+                        if (imgBlackBord.sprite != null)
+                        {
+                            //スライダーのゲームオブジェクトを活性化する
+                            sldPictureSize.gameObject.SetActive(true);
+
+                            //スライダーを活性化する
+                            sldPictureSize.interactable = true;
+                        }
+
                         //パス入力欄を空にする
                         ifPicturePath.text = string.Empty;
                     }
@@ -270,6 +291,15 @@ namespace SchoolMetaverse
 
                         //InputFieldと画像送信ボタンを非活性化する
                         ifPicturePath.interactable = btnPicturePath.interactable = false;
+
+                        if (imgBlackBord.sprite != null)
+                        {
+                            //スライダーのゲームオブジェクトを非活性化する
+                            sldPictureSize.gameObject.SetActive(false);
+
+                            //スライダーを非活性化する
+                            sldPictureSize.interactable = false;
+                        }
                     }
                 })
                 .AddTo(this);
@@ -279,7 +309,7 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //メッセージが入力されていないなら
-                    if(ifMessage.text == string.Empty)
+                    if (ifMessage.text == string.Empty)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
@@ -345,6 +375,25 @@ namespace SchoolMetaverse
 
             //メッセージ入力欄を空にする
             ifMessage.text = string.Empty;
+        }
+
+        /// <summary>
+        /// 黒板のイメージのスプライトを設定する
+        /// </summary>
+        /// <param name="sprite">スプライト</param>
+        /// <param name="width">幅</param>
+        /// <param name="height">高さ</param>
+        public void SetImgBlackBordSprite(Sprite sprite, float width, float height)
+        {
+            //黒板を活性化する
+            imgBlackBord.gameObject.SetActive(true);
+
+            //黒板のサイズを設定する
+            rtBlackBord.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            rtBlackBord.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+            //黒板のスプライトを設定する
+            imgBlackBord.sprite = sprite;
         }
     }
 }

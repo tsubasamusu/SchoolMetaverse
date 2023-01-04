@@ -16,28 +16,28 @@ namespace SchoolMetaverse
         [SerializeField]
         private MessageManager messageManager;//MessageManager
 
-        [SerializeField]
-        private Material blackBoardMaterial;//黒板のマテリアル
-
         /// <summary>
         /// 画像を送信する
         /// </summary>
         public void SendPicture()
         {
             //入力された画像のパスを取得する
-            string picturePath = string.Empty;//"C:/Users/Hashimoto/Pictures/ゲーム素材/ゲージ/IMG_4472.png";
+            string picturePath = uiManagerMain.IfPicturePath.text;
 
             //イメージ（保持用）
-            Image imgPicture = null;
+            Image imgPicture;
 
             //イメージを取得する
-            try{imgPicture = Image.FromFile(picturePath);}
+            try {imgPicture = Image.FromFile(picturePath);}
 
             //ファイルが見つからなかったら
             catch(FileNotFoundException)
             {
                 //メッセージを送信する
                 messageManager.PrepareSendMessage("Bot", "正しい画像のパスを入力してください。");
+
+                //以降の処理を行わない
+                return;
             }
 
             //ImageConverterを作成する
@@ -59,8 +59,11 @@ namespace SchoolMetaverse
                 return;
             }
 
-            //黒板のテクスチャを設定する
-            blackBoardMaterial.mainTexture= texture;
+            //スプライトを作成する
+            Sprite sprite = Sprite.Create(texture,new Rect(0f,0f,texture.width,texture.height),Vector2.zero);
+
+            //黒板のスプライトを設定する
+            uiManagerMain.SetImgBlackBordSprite(sprite, texture.width, texture.height);
         }
     }
 }
