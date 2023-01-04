@@ -34,6 +34,7 @@ namespace SchoolMetaverse
             //デバイスに保存されているデータを取得する
             if (PlayerPrefs.HasKey("PlayerName")) playerName = PlayerPrefs.GetString("PlayerName");
             if (PlayerPrefs.HasKey("LookSensitivity")) lookSensitivity = PlayerPrefs.GetFloat("LookSensitivity");
+            if (PlayerPrefs.HasKey("BgmVolume")) lookSensitivity = PlayerPrefs.GetFloat("BgmVolume");
         }
 
         /// <summary>
@@ -45,5 +46,10 @@ namespace SchoolMetaverse
         /// デバイスに視点感度を保存する
         /// </summary>
         public void SavelookSensitivityInDevice() { PlayerPrefs.SetFloat("LookSensitivity", lookSensitivity); }
+
+        /// <summary>
+        /// デバイスにBGMの音量を保存する
+        /// </summary>
+        public void SaveBgmVolumeInDevice() { PlayerPrefs.SetFloat("BgmVolume", bgmVolume); }
     }
 }

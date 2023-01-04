@@ -94,12 +94,18 @@ namespace SchoolMetaverse
                     //設定が表示されているなら
                     if (cgSetting.alpha != 0f)
                     {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
                         //ボタンのアニメーションを行う
                         PlayButtonAnimation(btnSetting);
 
                         //以降の処理を行わない
                         return;
                     }
+
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
 
                     //メッセージが表示されていないなら
                     if (cgMessage.alpha == 0f)
@@ -139,12 +145,18 @@ namespace SchoolMetaverse
                     //メッセージが表示されているなら
                     if (cgMessage.alpha != 0f)
                     {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
                         //ボタンのアニメーションを行う
                         PlayButtonAnimation(btnMessage);
 
                         //以降の処理を行わない
                         return;
                     }
+
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
 
                     //設定が表示されていないなら
                     if (cgSetting.alpha == 0f)
@@ -174,18 +186,40 @@ namespace SchoolMetaverse
                         sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
 
                         //設定された視点感度を取得する
-                        GameData.instance.lookSensitivity= sldLookSensitivity.value * 10f;
+                        GameData.instance.lookSensitivity = sldLookSensitivity.value * 10f;
+
+                        //設定されたBGMの音量を取得する
+                        GameData.instance.bgmVolume=sldBgmVolume.value;
 
                         //設定された視点感度をデバイスに保存する
                         GameData.instance.SavelookSensitivityInDevice();
+
+                        //設定されたBGMの音量をデバイスに保存する
+                        GameData.instance.SaveBgmVolumeInDevice();
                     }
                 })
                 .AddTo(this);
 
             //メッセージ送信ボタンを押された際の処理
             btnSendMessage.OnClickAsObservable()
-                .Where(_ => inputField.text != string.Empty)
-                .Subscribe(_ => { messageManager.PrepareSendMessage(GameData.instance.playerName, inputField.text); })
+                .Subscribe(_ =>
+                {
+                    //メッセージが入力されていないなら
+                    if(inputField.text == string.Empty)
+                    {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.メッセージ送信ボタンを押した時の音);
+
+                    //メッセージ送信の準備を行う
+                    messageManager.PrepareSendMessage(GameData.instance.playerName, inputField.text);
+                })
                 .AddTo(this);
 
             //画像送信ボタンを押された際の処理
