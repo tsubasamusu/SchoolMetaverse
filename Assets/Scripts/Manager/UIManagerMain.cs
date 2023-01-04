@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -251,6 +252,9 @@ namespace SchoolMetaverse
                     //効果音を再生する
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
 
+                    //SingleAssignmentDisposableを作成する
+                    var disposable = new SingleAssignmentDisposable();
+
                     //画像送信画面が表示されていないなら
                     if (cgSendPicture.alpha == 0f)
                     {
@@ -272,11 +276,16 @@ namespace SchoolMetaverse
                             //スライダーを活性化する
                             sldPictureSize.interactable = true;
 
-                            //入力されたサイズを取得する
-                            float scale = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
+                            //画像のサイズの変更処理
+                            disposable.Disposable= this.UpdateAsObservable()
+                            .Subscribe(_ =>
+                            {
+                                //入力されたサイズを取得する
+                                float scale = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
 
-                            //黒板のサイズを変更する
-                            rtBlackBord.localScale = new Vector3(scale, scale, scale);
+                                //黒板のサイズを変更する
+                                rtBlackBord.localScale = new Vector3(scale, scale, scale);
+                            });
                         }
 
                         //パス入力欄を空にする
@@ -302,6 +311,9 @@ namespace SchoolMetaverse
 
                             //スライダーを非活性化する
                             sldPictureSize.interactable = false;
+
+                            //購読を停止する
+                            disposable.Dispose();
                         }
                     }
                 })

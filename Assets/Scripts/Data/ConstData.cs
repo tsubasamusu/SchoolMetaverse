@@ -27,8 +27,6 @@ namespace SchoolMetaverse
 
         public const float PICTURE_SIZE_RATIO = 2f;//画像のサイズの調節用変数
 
-        public const float PICTURE_SIZE_SPAN = 1f;//画像のサイズの同期の間隔
-
         public const string PASSCODE = "0308";//パスコード
 
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
