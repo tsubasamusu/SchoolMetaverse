@@ -103,14 +103,14 @@ namespace SchoolMetaverse
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
                 .Subscribe(_ =>
                 {
-                    //設定が表示されているなら
-                    if (cgSetting.alpha != 0f)
+                    //他の画面が表示されているなら
+                    if (cgSetting.alpha != 0f||cgSendPicture.alpha!=0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
 
                         //ボタンのアニメーションを行う
-                        PlayButtonAnimation(btnSetting);
+                        PlayButtonAnimation(btnMessage);
 
                         //以降の処理を行わない
                         return;
@@ -154,14 +154,14 @@ namespace SchoolMetaverse
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
                 .Subscribe(_ =>
                 {
-                    //メッセージが表示されているなら
-                    if (cgMessage.alpha != 0f)
+                    //他の画面が表示されているなら
+                    if (cgMessage.alpha != 0f||cgSendPicture.alpha!=0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
 
                         //ボタンのアニメーションを行う
-                        PlayButtonAnimation(btnMessage);
+                        PlayButtonAnimation(btnSetting);
 
                         //以降の処理を行わない
                         return;
@@ -218,6 +218,57 @@ namespace SchoolMetaverse
                 })
                 .AddTo(this);
 
+            //画像送信ボタンを押された際の処理
+            btnSendPicture.OnClickAsObservable()
+                .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
+                .Subscribe(_ =>
+                {
+                    //他の画面が表示されているなら
+                    if (cgMessage.alpha != 0f || cgSetting.alpha != 0f)
+                    {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                        //ボタンのアニメーションを行う
+                        PlayButtonAnimation(btnSendPicture);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
+
+                    //画像送信画面が表示されていないなら
+                    if (cgSendPicture.alpha == 0f)
+                    {
+                        //画像送信用のキャンバスグループを表示する
+                        cgSendPicture.alpha = 1f;
+
+                        //サブの背景を活性化する
+                        imgSubBackground.gameObject.SetActive(true);
+
+                        //InputFieldと画像送信ボタンを活性化する
+                        ifPicturePath.interactable = btnPicturePath.interactable = true;
+
+                        //パス入力欄を空にする
+                        ifPicturePath.text = string.Empty;
+                    }
+                    //画像送信画面が表示されているなら
+                    else
+                    {
+                        //画像送信用のキャンバスグループを非表示にする
+                        cgSendPicture.alpha = 0f;
+
+                        //サブの背景を非活性化する
+                        imgSubBackground.gameObject.SetActive(false);
+
+                        //InputFieldと画像送信ボタンを非活性化する
+                        ifPicturePath.interactable = btnPicturePath.interactable = false;
+                    }
+                })
+                .AddTo(this);
+
             //メッセージ送信ボタンを押された際の処理
             btnSendMessage.OnClickAsObservable()
                 .Subscribe(_ =>
@@ -237,15 +288,6 @@ namespace SchoolMetaverse
 
                     //メッセージ送信の準備を行う
                     messageManager.PrepareSendMessage(GameData.instance.playerName, ifMessage.text);
-                })
-                .AddTo(this);
-
-            //画像送信ボタンを押された際の処理
-            btnSendPicture.OnClickAsObservable()
-                .Subscribe(_ =>
-                {
-                    //if()
-                    pictureManager.GetPictureData();
                 })
                 .AddTo(this);
 
