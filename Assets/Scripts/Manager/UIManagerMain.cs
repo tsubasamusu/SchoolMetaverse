@@ -51,6 +51,9 @@ namespace SchoolMetaverse
         private Text txtMessage;//メッセージのテキスト
 
         [SerializeField]
+        private Text txtSendPictureError;//画像送信画面のエラー表示用のテキスト
+
+        [SerializeField]
         private InputField ifMessage;//メッセージ入力用のインプットフィールド
 
         [SerializeField]
@@ -181,7 +184,7 @@ namespace SchoolMetaverse
                 .Subscribe(_ =>
                 {
                     //メッセージ画面が表示されているなら
-                    if (cgMessage.alpha != 0f )
+                    if (cgMessage.alpha != 0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
@@ -306,6 +309,9 @@ namespace SchoolMetaverse
                         //InputFieldと画像送信ボタンを活性化する
                         ifPicturePath.interactable = btnPicturePath.interactable = true;
 
+                        //エラーを表示を空にする
+                        txtSendPictureError.text = string.Empty;
+
                         //黒板に画像が表示されているなら
                         if (imgBlackBord.sprite != null)
                         {
@@ -316,7 +322,7 @@ namespace SchoolMetaverse
                             sldPictureSize.interactable = true;
 
                             //画像のサイズの変更処理
-                            disposable.Disposable= this.UpdateAsObservable()
+                            disposable.Disposable = this.UpdateAsObservable()
                             .Subscribe(_ =>
                             {
                                 //入力されたサイズを取得する
@@ -398,7 +404,7 @@ namespace SchoolMetaverse
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.送信ボタンを押した時の音);
 
                     //画像を送信する準備を行う
-                    pictureManager.PrepareSendPicture(ifPicturePath.text);
+                    pictureManager.SendPicture(ifPicturePath.text);
 
                     //プレイヤーが入力したテキストを空にする
                     ifPicturePath.text = string.Empty;
@@ -455,5 +461,11 @@ namespace SchoolMetaverse
             //大きさを初期値に設定する
             rtBlackBord.localScale = new(scale, scale, scale);
         }
+
+        /// <summary>
+        /// 画像送信画面にてエラーを表示する
+        /// </summary>
+        /// <param name="text">テキスト</param>
+        public void SetTxtSendPictureError(string text) { txtSendPictureError.text = text; }
     }
 }

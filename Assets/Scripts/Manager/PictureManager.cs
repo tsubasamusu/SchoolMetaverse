@@ -9,13 +9,10 @@ namespace SchoolMetaverse
     /// 画像に関する処理を行う
     /// </summary>
     [RequireComponent(typeof(PhotonView))]
-    public class PictureManager : MonoBehaviourPunCallbacks,ISetUp
+    public class PictureManager : MonoBehaviour,ISetUp
     {
         [SerializeField]
         private UIManagerMain uiManagerMain;//UIManagerMain
-
-        [SerializeField]
-        private MessageManager messageManager;//MessageManager
 
         /// <summary>
         /// PictureManagerの初期設定を行う
@@ -31,16 +28,9 @@ namespace SchoolMetaverse
         }
 
         /// <summary>
-        /// 画像を送信する準備を行う
-        /// </summary>
-        /// <param name="picturePath"></param>
-        public void PrepareSendPicture(string picturePath) { photonView.RPC(nameof(SendPicture), RpcTarget.All,picturePath); }
-
-        /// <summary>
         /// 画像を送信する
         /// </summary>
-        [PunRPC]
-        private void SendPicture(string picturePath)
+        public void SendPicture(string picturePath)
         {
             //イメージ（保持用）
             Image imgPicture;
@@ -51,8 +41,8 @@ namespace SchoolMetaverse
             //ファイルが見つからなかったら
             catch (FileNotFoundException)
             {
-                //メッセージを送信する
-                messageManager.PrepareSendMessage("Bot", "正しい画像のパスを入力してください。");
+                //エラーを表示する
+                uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。");
 
                 //以降の処理を行わない
                 return;
@@ -80,8 +70,8 @@ namespace SchoolMetaverse
             //テクスチャを作成できなかったら
             if (!texture.LoadImage(bytes))
             {
-                //メッセージを送信する
-                messageManager.PrepareSendMessage("Bot", "画像のテクスチャを作成できませんでした。");
+                //エラーを表示する
+                uiManagerMain.SetTxtSendPictureError("画像のテクスチャを作成できませんでした。\n開発者に問い合わせてください。\nhttps://tsubasamusu.com");
 
                 //以降の処理を行わない
                 return;
