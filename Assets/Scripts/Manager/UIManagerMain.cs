@@ -88,9 +88,6 @@ namespace SchoolMetaverse
         /// </summary>
         public InputField IfMessage { get => ifMessage; }
 
-        //他のプレイヤーが画像のサイズを変更中かどうか
-        bool isSettingPictureSizeOther = false;
-
         /// <summary>
         /// UIManagerMainの初期設定を行う
         /// </summary>
@@ -340,9 +337,6 @@ namespace SchoolMetaverse
                     //SingleAssignmentDisposableを作成する
                     var disposable = new SingleAssignmentDisposable();
 
-                    ////他のプレイヤーが画像のサイズを変更中かどうか
-                    bool isSettingPictureSizeOther = false;
-
                     //画像送信画面が表示されているなら
                     if (cgSendPicture.alpha == 1f)
                     {
@@ -364,21 +358,18 @@ namespace SchoolMetaverse
                         //スライダーを非活性化する
                         sldPictureSize.interactable = false;
 
-                        //他のプレイヤーが画像のサイズを変更中なら、以降の処理を行わない
-                        if (isSettingPictureSizeOther) return;
+                        //購読を停止する
+                        disposable?.Dispose();
 
                         //Hashtableを作成する
                         var hashtable = new ExitGames.Client.Photon.Hashtable
                         {
-                            //ゲームサーバーに「画像のサイズを設定中ではない」という情報を持たせる
+                            //自分のデータに「画像のサイズを変更中ではない」という情報を持たせる
                             ["IsSettingPictureSize"] = false
                         };
 
                         //作成したカスタムプロパティを登録する
-                        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
-
-                        //購読を停止する
-                        disposable?.Dispose();
+                        PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
 
                         //以降の処理を行わない
                         return;
@@ -399,24 +390,24 @@ namespace SchoolMetaverse
                     //黒板に画像が表示されていないなら、以降の処理を行わない
                     if (imgBlackBord.sprite == null) return;
 
-                    //他のプレイヤーが画像のサイズを変更中なら
-                    if (PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] is bool isSettingPictureSize && isSettingPictureSize)
+                    //他のプレイヤーが画像のサイズを変更中ではないなら
+                    if (!CheckIsSettingPictureSizeOther())
                     {
-                        //Hashtableを作成する
-                        var hashtable = new ExitGames.Client.Photon.Hashtable
-                        {
-                            //ゲームサーバーに「画像のサイズを設定中」という情報を持たせる
-                            ["IsSettingPictureSize"] = true
-                        };
-
-                        //作成したカスタムプロパティを登録する
-                        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
-
                         //スライダーのゲームオブジェクトを活性化する
                         SetSldPictureSizeActive(true);
 
                         //スライダーを活性化する
                         sldPictureSize.interactable = true;
+
+                        //Hashtableを作成する
+                        var hashtable = new ExitGames.Client.Photon.Hashtable
+                        {
+                            //自分のデータに「画像のサイズを変更中」という情報を持たせる
+                            ["IsSettingPictureSize"] = true
+                        };
+
+                        //作成したカスタムプロパティを登録する
+                        PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
 
                         //画像のサイズの変更処理
                         disposable.Disposable = this.UpdateAsObservable()
@@ -426,14 +417,14 @@ namespace SchoolMetaverse
                             float size = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
 
                             //Hashtableを作成する
-                            var hashtable = new ExitGames.Client.Photon.Hashtable
+                            var hashtable1 = new ExitGames.Client.Photon.Hashtable
                             {
                                 //ゲームサーバーに画像のサイズを持たせる
                                 ["PictureSize"] = size
                             };
 
                             //作成したカスタムプロパティを登録する
-                            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+                            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable1);
 
                             //画像のサイズを設定する
                             rtBlackBord.localScale = new(size, size, size);
@@ -451,9 +442,6 @@ namespace SchoolMetaverse
 
                     //エラーを表示する
                     SetTxtSendPictureError("他のプレイヤーが画像のサイズを変更中です。");
-
-                    //他のプレイヤーが画像のサイズを変更中の状態に切り替える
-                    isSettingPictureSizeOther = true;
                 })
                 .AddTo(this);
         }
@@ -543,6 +531,24 @@ namespace SchoolMetaverse
         private void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
 
         /// <summary>
+        /// 「他のプレイヤーが画像のサイズを変更中かどうか」を調べる
+        /// </summary>
+        /// <returns>他のプレイヤーが画像のサイズを変更中かどうか</returns>
+        private bool CheckIsSettingPictureSizeOther()
+        {
+            //同じルームに居る他のプレイヤーの数だけ繰り返す
+            for (int i = 0; i < PhotonNetwork.PlayerListOthers.Length; i ++)
+            {
+                //繰り返し処理で取得したプレイヤーが、画像のサイズを変更中なら、trueを返す
+                if (PhotonNetwork.PlayerListOthers[i].CustomProperties["IsSettingPictureSize"] is bool isSettingPictureSize
+                    && isSettingPictureSize) return true;
+            }
+
+            //falseを返す
+            return false;
+        }
+
+        /// <summary>
         /// メッセージのテキストを更新する
         /// </summary>
         public void UpdateTxtMessage()
@@ -600,11 +606,5 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="isActive">活性化するかどうか</param>
         public void SetSldPictureSizeActive(bool isActive) { sldPictureSize.gameObject.SetActive(isActive); }
-
-        private void Update()
-        {
-            //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"]);
-            Debug.Log(isSettingPictureSizeOther);
-        }
     }
 }
