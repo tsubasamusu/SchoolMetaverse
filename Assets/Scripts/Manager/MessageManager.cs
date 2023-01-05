@@ -31,9 +31,6 @@ namespace SchoolMetaverse
         [PunRPC]
         private void SendMessage(string senderName, string message)
         {
-            //メッセージの配列に空きが無いなら、メッセージの配列の最初の要素を空にする
-            if (!CheckMessagesIsFull()) GameData.instance.messages[0] = string.Empty;
-
             //メッセージの配列の要素数だけ繰り返す
             for (int i = 0; i < GameData.instance.messages.Length; i++)
             {
@@ -50,22 +47,15 @@ namespace SchoolMetaverse
             //メッセージのテキストを更新する
             uiManagerMain.UpdateTxtMessage();
 
-            //メッセージの配列に空きがないか調べる
-            static bool CheckMessagesIsFull()
+            //Hashtableを作成する
+            var hashtable = new ExitGames.Client.Photon.Hashtable
             {
-                //使用されている要素の数
-                int usedBoxCount = 0;
+                //ルームにメッセージを送信した回数の情報を持たせる
+                ["SendMessageCount"] = PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"] is int count ? count + 1 : 1
+            };
 
-                //メッセージの配列の要素数だけ繰り返す
-                for (int i = 0; i < GameData.instance.messages.Length; i++)
-                {
-                    //使用されている要素の数をカウントする
-                    if (GameData.instance.messages[i] != string.Empty) usedBoxCount++;
-                }
-
-                //結果を返す
-                return usedBoxCount != GameData.instance.messages.Length;
-            }
+            //作成したカスタムプロパティを登録する
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
         }
 
         /// <summary>

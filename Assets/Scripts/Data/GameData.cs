@@ -1,3 +1,5 @@
+using System;
+using UniRx;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -17,7 +19,7 @@ namespace SchoolMetaverse
         public float bgmVolume = 1f;//BGMの音量
 
         [HideInInspector]
-        public string[] messages = new string[ConstData.MAX_MESSAGE_LINES];//メッセージの配列
+        public string[] messages=new string[ConstData.MAX_MESSAGE_LINES];//メッセージの配列
 
         public static GameData instance;//インスタンス
 

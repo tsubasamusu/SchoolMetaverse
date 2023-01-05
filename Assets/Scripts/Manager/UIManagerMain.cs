@@ -23,6 +23,9 @@ namespace SchoolMetaverse
         private Image imgBlackBord;//黒板のイメージ
 
         [SerializeField]
+        private Image imgNotice;//通知のイメージ
+
+        [SerializeField]
         private Button btnSendPicture;//画像送信ボタン
 
         [SerializeField]
@@ -105,6 +108,9 @@ namespace SchoolMetaverse
             StartControlBtnSendPicture();
             StartControlBtnSendMessage();
             StartControlBtnPicturePath();
+
+            //通知のイメージの制御を開始する
+            StartControlImgNotice();
         }
 
         /// <summary>
@@ -120,6 +126,9 @@ namespace SchoolMetaverse
 
             //全てのボタンを表示する
             cgButton.alpha = 1f;
+
+            //通知を非活性化する
+            imgNotice.gameObject.SetActive(false);
 
             //設定画面のスライダーを非活性化する
             sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
@@ -199,6 +208,9 @@ namespace SchoolMetaverse
 
                         //メッセージ入力欄を空にする
                         ifMessage.text = string.Empty;
+
+                        //通知を非表示にする
+                        imgNotice.gameObject.SetActive(false);
 
                         //以降の処理を行わない
                         return;
@@ -572,6 +584,58 @@ namespace SchoolMetaverse
 
                 //1フレーム待つ
                 yield return null;
+            }
+        }
+
+        /// <summary>
+        /// 通知のイメージの制御を開始する
+        /// </summary>
+        private void StartControlImgNotice()
+        {
+            //メッセージの送信回数の確認回数
+            int checkedCount = 0;
+
+            //送信回数（記憶用）
+            int sendMessageCount = 0;
+
+            //通知の制御処理
+            this.UpdateAsObservable()
+                .ThrottleFirst(System.TimeSpan.FromSeconds(ConstData.CHECK_MESSAGES_SPAN))
+                .Subscribe(_ => 
+                {
+                    //ゲームサーバーにメッセージの送信回数の情報があるなら
+                    if (PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"] is int sendPictureCount)
+                    {
+                        //通知が表示されているなら、以降の処理を行わない
+                        if (imgNotice.gameObject.activeSelf) return;
+
+                        //メッセージの送信回数が増えていないなら、以降の処理を行わない
+                        if (!IncreasedSendMessageCount()) return;
+
+                        //メッセージ画面が表示されていないなら、通知を表示する
+                        if (cgMessage.alpha == 0f)imgNotice.gameObject.SetActive(true);
+                    }
+                })
+                .AddTo(this);
+
+            //メッセージの送信回数が増えたかどうか
+            bool IncreasedSendMessageCount()
+            {
+                //メッセージの送信回数の確認回数をカウントする
+                checkedCount++;
+
+                //メッセージを確認した回数が偶数なら
+                if (checkedCount % 2 == 0)
+                {
+                    //ゲームサーバーに保存されている、メッセージの送信回数を取得する
+                    sendMessageCount = (int)PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"];
+
+                    //以降の処理を行わない
+                    return false;
+                }
+
+                //結果を返す
+                return sendMessageCount< (int)PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"];
             }
         }
 
