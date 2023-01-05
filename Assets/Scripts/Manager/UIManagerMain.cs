@@ -377,7 +377,7 @@ namespace SchoolMetaverse
                                 PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
                                 //スライダーのゲームオブジェクトを活性化する
-                                sldPictureSize.gameObject.SetActive(true);
+                                SetSldPictureSizeActive(true);
 
                                 //スライダーを活性化する
                                 sldPictureSize.interactable = true;
@@ -436,7 +436,7 @@ namespace SchoolMetaverse
                         if (imgBlackBord.sprite != null)
                         {
                             //スライダーのゲームオブジェクトを非活性化する
-                            sldPictureSize.gameObject.SetActive(false);
+                            SetSldPictureSizeActive(false);
 
                             //スライダーを非活性化する
                             sldPictureSize.interactable = false;
@@ -532,7 +532,7 @@ namespace SchoolMetaverse
                         ifPicturePath.interactable = btnPicturePath.interactable = false;
 
                         //スライダーのゲームオブジェクトを非活性化する
-                        sldPictureSize.gameObject.SetActive(false);
+                        SetSldPictureSizeActive(false);
 
                         //スライダーを非活性化する
                         sldPictureSize.interactable = false;
@@ -599,6 +599,12 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="text">テキスト</param>
         public void SetTxtSendPictureError(string text) { txtSendPictureError.text = text; }
+
+        /// <summary>
+        /// 画像のサイズ調節用のスライダーを活性化・非活性化する
+        /// </summary>
+        /// <param name="isActive">活性化するかどうか</param>
+        public void SetSldPictureSizeActive(bool isActive) { sldPictureSize.gameObject.SetActive(isActive); }
 
         private void Update()
         {

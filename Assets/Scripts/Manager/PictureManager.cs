@@ -69,6 +69,9 @@ namespace SchoolMetaverse
                 //効果音を再生する
                 SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
 
+                //画像のサイズ調節用のスライダーを非活性化する
+                uiManagerMain.SetSldPictureSizeActive(false);
+
                 //エラーを表示する
                 uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。");
 
@@ -100,6 +103,9 @@ namespace SchoolMetaverse
             {
                 //効果音を再生する
                 SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
+                //画像のサイズ調節用のスライダーを非活性化する
+                uiManagerMain.SetSldPictureSizeActive(false);
 
                 //エラーを表示する
                 uiManagerMain.SetTxtSendPictureError("画像のテクスチャを作成できませんでした。\n開発者に問い合わせてください。\nhttps://tsubasamusu.com");
