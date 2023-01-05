@@ -193,19 +193,19 @@ namespace SchoolMetaverse
 
                         //メッセージ入力欄を空にする
                         ifMessage.text = string.Empty;
-                    }
-                    //メッセージが表示されているなら
-                    else
-                    {
-                        //メッセージのキャンバスグループを非表示にする
-                        cgMessage.alpha = 0f;
 
-                        //サブの背景を非活性化する
-                        imgSubBackground.gameObject.SetActive(false);
-
-                        //InputFieldとメッセージ送信ボタンを非活性化する
-                        ifMessage.interactable = btnSendMessage.interactable = false;
+                        //以降の処理を行わない
+                        return;
                     }
+
+                    //メッセージのキャンバスグループを非表示にする
+                    cgMessage.alpha = 0f;
+
+                    //サブの背景を非活性化する
+                    imgSubBackground.gameObject.SetActive(false);
+
+                    //InputFieldとメッセージ送信ボタンを非活性化する
+                    ifMessage.interactable = btnSendMessage.interactable = false;
                 })
                 .AddTo(this);
         }
@@ -266,34 +266,34 @@ namespace SchoolMetaverse
 
                         //BGMの音量のスライダーの初期値を設定する
                         sldBgmVolume.value = GameData.instance.bgmVolume;
+
+                        //以降の処理を行わない
+                        return;
                     }
-                    //設定が表示されているなら
-                    else
-                    {
-                        //設定のキャンバスグループを非表示にする
-                        cgSetting.alpha = 0f;
 
-                        //サブの背景を非活性化する
-                        imgSubBackground.gameObject.SetActive(false);
+                    //設定のキャンバスグループを非表示にする
+                    cgSetting.alpha = 0f;
 
-                        //BGMの音量のスライダーと、視点感度のスライダーを非活性化する
-                        sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
+                    //サブの背景を非活性化する
+                    imgSubBackground.gameObject.SetActive(false);
 
-                        //設定された視点感度を取得する
-                        GameData.instance.lookSensitivity = sldLookSensitivity.value * 10f;
+                    //BGMの音量のスライダーと、視点感度のスライダーを非活性化する
+                    sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
 
-                        //設定されたBGMの音量を取得する
-                        GameData.instance.bgmVolume = sldBgmVolume.value;
+                    //設定された視点感度を取得する
+                    GameData.instance.lookSensitivity = sldLookSensitivity.value * 10f;
 
-                        //設定された視点感度をデバイスに保存する
-                        GameData.instance.SavelookSensitivityInDevice();
+                    //設定されたBGMの音量を取得する
+                    GameData.instance.bgmVolume = sldBgmVolume.value;
 
-                        //設定されたBGMの音量をデバイスに保存する
-                        GameData.instance.SaveBgmVolumeInDevice();
+                    //設定された視点感度をデバイスに保存する
+                    GameData.instance.SavelookSensitivityInDevice();
 
-                        //BGMの音量を更新する
-                        SoundManager.instance.UpdateBgmVolume();
-                    }
+                    //設定されたBGMの音量をデバイスに保存する
+                    GameData.instance.SaveBgmVolumeInDevice();
+
+                    //BGMの音量を更新する
+                    SoundManager.instance.UpdateBgmVolume();
                 })
                 .AddTo(this);
         }
@@ -341,87 +341,10 @@ namespace SchoolMetaverse
                     var disposable = new SingleAssignmentDisposable();
 
                     ////他のプレイヤーが画像のサイズを変更中かどうか
-                    //bool isSettingPictureSizeOther = false;
+                    bool isSettingPictureSizeOther = false;
 
-                    //画像送信画面が表示されていないなら
-                    if (cgSendPicture.alpha == 0f)
-                    {
-                        //画像送信用のキャンバスグループを表示する
-                        cgSendPicture.alpha = 1f;
-
-                        //サブの背景を活性化する
-                        imgSubBackground.gameObject.SetActive(true);
-
-                        //InputFieldと画像送信ボタンを活性化する
-                        ifPicturePath.interactable = btnPicturePath.interactable = true;
-
-                        //エラー表示を空にする
-                        txtSendPictureError.text = string.Empty;
-
-                        //黒板に画像が表示されているなら
-                        if (imgBlackBord.sprite != null)
-                        {
-                            //他のプレイヤーが画像のサイズを設定中でなければ
-                            if ((PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] is bool isSettingPictureSize
-                            && !isSettingPictureSize)
-                            || PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] == null)
-                            {
-                                //Hashtableを作成する
-                                var hashtable = new ExitGames.Client.Photon.Hashtable
-                                {
-                                    //ゲームサーバーに「画像のサイズを設定中」という情報を持たせる
-                                    ["IsSettingPictureSize"] = true
-                                };
-
-                                //作成したカスタムプロパティを登録する
-                                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
-
-                                //スライダーのゲームオブジェクトを活性化する
-                                SetSldPictureSizeActive(true);
-
-                                //スライダーを活性化する
-                                sldPictureSize.interactable = true;
-
-                                //画像のサイズの変更処理
-                                disposable.Disposable = this.UpdateAsObservable()
-                                .Subscribe(_ =>
-                                {
-                                    //入力されたサイズを取得する
-                                    float size = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
-
-                                    //Hashtableを作成する
-                                    var hashtable = new ExitGames.Client.Photon.Hashtable
-                                    {
-                                        //ゲームサーバーに画像のサイズを持たせる
-                                        ["PictureSize"] = size
-                                    };
-
-                                    //作成したカスタムプロパティを登録する
-                                    PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
-
-                                    //画像のサイズを設定する
-                                    rtBlackBord.localScale = new(size, size, size);
-                                });
-
-                                //パス入力欄を空にする
-                                ifPicturePath.text = string.Empty;
-                            }
-                            //他のプレイヤーが画像のサイズの変更中なら
-                            else
-                            {
-                                //効果音を再生する
-                                SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
-
-                                //エラーを表示する
-                                SetTxtSendPictureError("他のプレイヤーが画像のサイズを変更中です。");
-
-                                //他のプレイヤーが画像のサイズを変更中の状態に切り替える
-                                isSettingPictureSizeOther = true;
-                            }
-                        }
-                    }
                     //画像送信画面が表示されているなら
-                    else
+                    if (cgSendPicture.alpha == 1f)
                     {
                         //画像送信用のキャンバスグループを非表示にする
                         cgSendPicture.alpha = 0f;
@@ -432,33 +355,105 @@ namespace SchoolMetaverse
                         //InputFieldと画像送信ボタンを非活性化する
                         ifPicturePath.interactable = btnPicturePath.interactable = false;
 
-                        //黒板に画像が表示されているなら
-                        if (imgBlackBord.sprite != null)
+                        //黒板に画像が表示されていないなら、以降の処理を行わない
+                        if (imgBlackBord.sprite == null) return;
+
+                        //スライダーのゲームオブジェクトを非活性化する
+                        SetSldPictureSizeActive(false);
+
+                        //スライダーを非活性化する
+                        sldPictureSize.interactable = false;
+
+                        //他のプレイヤーが画像のサイズを変更中なら、以降の処理を行わない
+                        if (isSettingPictureSizeOther) return;
+
+                        //Hashtableを作成する
+                        var hashtable = new ExitGames.Client.Photon.Hashtable
                         {
-                            //スライダーのゲームオブジェクトを非活性化する
-                            SetSldPictureSizeActive(false);
+                            //ゲームサーバーに「画像のサイズを設定中ではない」という情報を持たせる
+                            ["IsSettingPictureSize"] = false
+                        };
 
-                            //スライダーを非活性化する
-                            sldPictureSize.interactable = false;
+                        //作成したカスタムプロパティを登録する
+                        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
-                            //他のプレイヤーが画像のサイズを変更中でないなら
-                            if (!isSettingPictureSizeOther)
-                            {
-                                //Hashtableを作成する
-                                var hashtable = new ExitGames.Client.Photon.Hashtable
-                                {
-                                    //ゲームサーバーに「画像のサイズを設定中ではない」という情報を持たせる
-                                    ["IsSettingPictureSize"] = false
-                                };
+                        //購読を停止する
+                        disposable?.Dispose();
 
-                                //作成したカスタムプロパティを登録する
-                                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
-
-                                //購読を停止する
-                                disposable?.Dispose();
-                            }
-                        }
+                        //以降の処理を行わない
+                        return;
                     }
+
+                    //画像送信用のキャンバスグループを表示する
+                    cgSendPicture.alpha = 1f;
+
+                    //サブの背景を活性化する
+                    imgSubBackground.gameObject.SetActive(true);
+
+                    //InputFieldと画像送信ボタンを活性化する
+                    ifPicturePath.interactable = btnPicturePath.interactable = true;
+
+                    //エラー表示を空にする
+                    txtSendPictureError.text = string.Empty;
+
+                    //黒板に画像が表示されていないなら、以降の処理を行わない
+                    if (imgBlackBord.sprite == null) return;
+
+                    //他のプレイヤーが画像のサイズを変更中なら
+                    if (PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] is bool isSettingPictureSize && isSettingPictureSize)
+                    {
+                        //Hashtableを作成する
+                        var hashtable = new ExitGames.Client.Photon.Hashtable
+                        {
+                            //ゲームサーバーに「画像のサイズを設定中」という情報を持たせる
+                            ["IsSettingPictureSize"] = true
+                        };
+
+                        //作成したカスタムプロパティを登録する
+                        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
+                        //スライダーのゲームオブジェクトを活性化する
+                        SetSldPictureSizeActive(true);
+
+                        //スライダーを活性化する
+                        sldPictureSize.interactable = true;
+
+                        //画像のサイズの変更処理
+                        disposable.Disposable = this.UpdateAsObservable()
+                        .Subscribe(_ =>
+                        {
+                            //入力されたサイズを取得する
+                            float size = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
+
+                            //Hashtableを作成する
+                            var hashtable = new ExitGames.Client.Photon.Hashtable
+                            {
+                                //ゲームサーバーに画像のサイズを持たせる
+                                ["PictureSize"] = size
+                            };
+
+                            //作成したカスタムプロパティを登録する
+                            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
+                            //画像のサイズを設定する
+                            rtBlackBord.localScale = new(size, size, size);
+                        });
+
+                        //パス入力欄を空にする
+                        ifPicturePath.text = string.Empty;
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
+                    //エラーを表示する
+                    SetTxtSendPictureError("他のプレイヤーが画像のサイズを変更中です。");
+
+                    //他のプレイヤーが画像のサイズを変更中の状態に切り替える
+                    isSettingPictureSizeOther = true;
                 })
                 .AddTo(this);
         }
@@ -519,24 +514,24 @@ namespace SchoolMetaverse
                     //プレイヤーが入力したテキストを空にする
                     ifPicturePath.text = string.Empty;
 
-                    //エラーが表示されていなければ
-                    if (txtSendPictureError.text == string.Empty)
-                    {
-                        //画像送信用のキャンバスグループを非表示にする
-                        cgSendPicture.alpha = 0f;
+                    //エラーが表示されているなら、以降の処理を行わない
+                    if (txtSendPictureError.text != string.Empty) return;
 
-                        //サブの背景を非活性化する
-                        imgSubBackground.gameObject.SetActive(false);
+                    //画像送信用のキャンバスグループを非表示にする
+                    cgSendPicture.alpha = 0f;
 
-                        //InputFieldと画像送信ボタンを非活性化する
-                        ifPicturePath.interactable = btnPicturePath.interactable = false;
+                    //サブの背景を非活性化する
+                    imgSubBackground.gameObject.SetActive(false);
 
-                        //スライダーのゲームオブジェクトを非活性化する
-                        SetSldPictureSizeActive(false);
+                    //InputFieldと画像送信ボタンを非活性化する
+                    ifPicturePath.interactable = btnPicturePath.interactable = false;
 
-                        //スライダーを非活性化する
-                        sldPictureSize.interactable = false;
-                    }
+                    //スライダーのゲームオブジェクトを非活性化する
+                    SetSldPictureSizeActive(false);
+
+                    //スライダーを非活性化する
+                    sldPictureSize.interactable = false;
+
                 })
                 .AddTo(this);
         }
