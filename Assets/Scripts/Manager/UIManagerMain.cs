@@ -88,10 +88,29 @@ namespace SchoolMetaverse
         /// </summary>
         public InputField IfMessage { get => ifMessage; }
 
+        //他のプレイヤーが画像のサイズを変更中かどうか
+        bool isSettingPictureSizeOther = false;
+
         /// <summary>
         /// UIManagerMainの初期設定を行う
         /// </summary>
         public void SetUp()
+        {
+            //UIの初期設定を行う
+            SetUpUI();
+
+            //各ボタンの制御を開始する
+            StartControlBtnMessage();
+            StartControlBtnSetting();
+            StartControlBtnSendPicture();
+            StartControlBtnSendMessage();
+            StartControlBtnPicturePath();
+        }
+
+        /// <summary>
+        /// UIの初期設定を行う
+        /// </summary>
+        private void SetUpUI()
         {
             //画像のサイズの初期値を取得する
             firstPictureSize = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
@@ -119,7 +138,13 @@ namespace SchoolMetaverse
 
                 //メインの背景を消す
                 .OnComplete(() => Destroy(imgMainBackground.gameObject));
+        }
 
+        /// <summary>
+        /// メッセージボタンの制御を開始する
+        /// </summary>
+        private void StartControlBtnMessage()
+        {
             //メッセージボタンを押された際の処理
             btnMessage.OnClickAsObservable()
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
@@ -183,7 +208,13 @@ namespace SchoolMetaverse
                     }
                 })
                 .AddTo(this);
+        }
 
+        /// <summary>
+        /// 設定ボタンの制御を開始する
+        /// </summary>
+        private void StartControlBtnSetting()
+        {
             //設定ボタンを押された際の処理
             btnSetting.OnClickAsObservable()
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
@@ -265,7 +296,13 @@ namespace SchoolMetaverse
                     }
                 })
                 .AddTo(this);
+        }
 
+        /// <summary>
+        /// 画像送信ボタンの制御を開始する
+        /// </summary>
+        private void StartControlBtnSendPicture()
+        {
             //画像送信ボタンを押された際の処理
             btnSendPicture.OnClickAsObservable()
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
@@ -303,6 +340,9 @@ namespace SchoolMetaverse
                     //SingleAssignmentDisposableを作成する
                     var disposable = new SingleAssignmentDisposable();
 
+                    ////他のプレイヤーが画像のサイズを変更中かどうか
+                    //bool isSettingPictureSizeOther = false;
+
                     //画像送信画面が表示されていないなら
                     if (cgSendPicture.alpha == 0f)
                     {
@@ -315,15 +355,15 @@ namespace SchoolMetaverse
                         //InputFieldと画像送信ボタンを活性化する
                         ifPicturePath.interactable = btnPicturePath.interactable = true;
 
-                        //エラーを表示を空にする
+                        //エラー表示を空にする
                         txtSendPictureError.text = string.Empty;
 
                         //黒板に画像が表示されているなら
                         if (imgBlackBord.sprite != null)
                         {
-                            //他のプレイヤーが画像のサイズを設定でなければ
+                            //他のプレイヤーが画像のサイズを設定中でなければ
                             if ((PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] is bool isSettingPictureSize
-                            && !isSettingPictureSize) 
+                            && !isSettingPictureSize)
                             || PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] == null)
                             {
                                 //Hashtableを作成する
@@ -374,6 +414,9 @@ namespace SchoolMetaverse
 
                                 //エラーを表示する
                                 SetTxtSendPictureError("他のプレイヤーが画像のサイズを変更中です。");
+
+                                //他のプレイヤーが画像のサイズを変更中の状態に切り替える
+                                isSettingPictureSizeOther = true;
                             }
                         }
                     }
@@ -398,23 +441,33 @@ namespace SchoolMetaverse
                             //スライダーを非活性化する
                             sldPictureSize.interactable = false;
 
-                            //Hashtableを作成する
-                            var hashtable = new ExitGames.Client.Photon.Hashtable
+                            //他のプレイヤーが画像のサイズを変更中でないなら
+                            if (!isSettingPictureSizeOther)
                             {
-                                //ゲームサーバーに「画像のサイズを設定中ではない」という情報を持たせる
-                                ["IsSettingPictureSize"] = false
-                            };
+                                //Hashtableを作成する
+                                var hashtable = new ExitGames.Client.Photon.Hashtable
+                                {
+                                    //ゲームサーバーに「画像のサイズを設定中ではない」という情報を持たせる
+                                    ["IsSettingPictureSize"] = false
+                                };
 
-                            //作成したカスタムプロパティを登録する
-                            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+                                //作成したカスタムプロパティを登録する
+                                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
-                            //購読を停止する
-                            disposable?.Dispose();
+                                //購読を停止する
+                                disposable?.Dispose();
+                            }
                         }
                     }
                 })
                 .AddTo(this);
+        }
 
+        /// <summary>
+        /// メッセージ送信ボタンの制御を開始する
+        /// </summary>
+        private void StartControlBtnSendMessage()
+        {
             //メッセージ送信ボタンを押された際の処理
             btnSendMessage.OnClickAsObservable()
                 .Subscribe(_ =>
@@ -436,7 +489,13 @@ namespace SchoolMetaverse
                     messageManager.PrepareSendMessage(GameData.instance.playerName, ifMessage.text);
                 })
                 .AddTo(this);
+        }
 
+        /// <summary>
+        /// 画像のパスの入力完了ボタンの制御を開始する
+        /// </summary>
+        private void StartControlBtnPicturePath()
+        {
             //画像のパスの入力完了ボタンを押された際の処理
             btnPicturePath.OnClickAsObservable()
                 .Subscribe(_ =>
@@ -454,17 +513,39 @@ namespace SchoolMetaverse
                     //効果音を再生する
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.送信ボタンを押した時の音);
 
-                    //画像を送信する準備を行う
+                    //画像を送信する
                     pictureManager.SendPicture(ifPicturePath.text);
 
                     //プレイヤーが入力したテキストを空にする
                     ifPicturePath.text = string.Empty;
+
+                    //エラーが表示されていなければ
+                    if (txtSendPictureError.text == string.Empty)
+                    {
+                        //画像送信用のキャンバスグループを非表示にする
+                        cgSendPicture.alpha = 0f;
+
+                        //サブの背景を非活性化する
+                        imgSubBackground.gameObject.SetActive(false);
+
+                        //InputFieldと画像送信ボタンを非活性化する
+                        ifPicturePath.interactable = btnPicturePath.interactable = false;
+
+                        //スライダーのゲームオブジェクトを非活性化する
+                        sldPictureSize.gameObject.SetActive(false);
+
+                        //スライダーを非活性化する
+                        sldPictureSize.interactable = false;
+                    }
                 })
                 .AddTo(this);
-
-            //ボタンのアニメーションを行う
-            static void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
         }
+
+        /// <summary>
+        /// ボタンのアニメーションを行う
+        /// </summary>
+        /// <param name="button">ボタン</param>
+        private void PlayButtonAnimation(Button button) { button.transform.DOScale(ConstData.BUTTON_ANIMATION_SIZE, 0.25f).SetLoops(2, LoopType.Yoyo).SetLink(button.gameObject); }
 
         /// <summary>
         /// メッセージのテキストを更新する
@@ -518,5 +599,11 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="text">テキスト</param>
         public void SetTxtSendPictureError(string text) { txtSendPictureError.text = text; }
+
+        private void Update()
+        {
+            //Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"]);
+            Debug.Log(isSettingPictureSizeOther);
+        }
     }
 }
