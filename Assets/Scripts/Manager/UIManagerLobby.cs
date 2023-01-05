@@ -155,10 +155,10 @@ namespace SchoolMetaverse
                 imgLoad.DOFade(1f, 0f);
 
                 //–³ŒÀ‚ÉŒJ‚è•Ô‚·
-                while(true)
+                while (true)
                 {
                     //‰ñ“]‚·‚é
-                    imgLoad.transform.Rotate(0f,0f,-360f/8f);
+                    imgLoad.transform.Rotate(0f, 0f, -360f / 8f);
 
                     //ˆê’èŽžŠÔ‘Ò‚Â
                     await UniTask.Delay(TimeSpan.FromSeconds(ConstData.IMG_LOAD_ROT_SPAN), cancellationToken: token);
