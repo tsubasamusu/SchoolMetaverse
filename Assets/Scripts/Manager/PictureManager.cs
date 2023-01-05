@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Drawing;
 using System.IO;
 using UniRx;
@@ -20,9 +21,9 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
-            Debug.Log(this);
             //画像を同期する
             this.UpdateAsObservable()
+                .Where(_ => PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPicture"] is bool isSettingPicture && !isSettingPicture)
                 .Where(_ => PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"] is byte[])
                 .ThrottleFirst(System.TimeSpan.FromSeconds(ConstData.PICTURE_SYNCHRONIZE_SPAN))
                 .Subscribe(_ => { SetPictureFromBytes((byte[])PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"]); })
@@ -73,7 +74,7 @@ namespace SchoolMetaverse
                 uiManagerMain.SetSldPictureSizeActive(false);
 
                 //エラーを表示する
-                uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。\n入力されたパス\n"+picturePath);
+                uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。\n入力されたパス\n" + picturePath);
 
                 //Hashtableを作成する
                 var hashtable1 = new ExitGames.Client.Photon.Hashtable
@@ -87,6 +88,16 @@ namespace SchoolMetaverse
 
                 //以降の処理を行わない
                 return;
+            }
+
+            //取得した画像のサイズが大きいなら
+            if (imgPicture.Width >= ConstData.MAX_PICTURE_SIZE || imgPicture.Height >= ConstData.MAX_PICTURE_SIZE)
+            {
+                //元の画像のサイズを変更する
+                imgPicture = imgPicture
+                    .GetThumbnailImage(imgPicture.Width / ConstData.DIVIDE_BIG_PICTURE_VALUE,
+                    imgPicture.Height / ConstData.DIVIDE_BIG_PICTURE_VALUE,
+                    delegate { return false; }, IntPtr.Zero);
             }
 
             //ImageConverterを作成する

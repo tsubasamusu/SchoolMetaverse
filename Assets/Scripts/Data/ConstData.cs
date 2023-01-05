@@ -11,6 +11,10 @@ namespace SchoolMetaverse
 
         public const int MAX_MESSAGE_LINES = 13;//メッセージの表示可能な最大行数
 
+        public const int MAX_PICTURE_SIZE = 1000;//取得する画像の最大サイズ
+
+        public const int DIVIDE_BIG_PICTURE_VALUE = 10;//大きなサイズの画像を割る数
+
         public const float LOOK_SMOOTH = 0.1f;//視点の滑らかさ
 
         public const float MAX_CUSOR_LENGTH_FROM_CENTER = 20f;//マウスカーソルの中央からの最大値
