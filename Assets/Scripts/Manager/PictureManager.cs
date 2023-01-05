@@ -1,6 +1,8 @@
 using Photon.Pun;
 using System.Drawing;
 using System.IO;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -9,7 +11,7 @@ namespace SchoolMetaverse
     /// 画像に関する処理を行う
     /// </summary>
     [RequireComponent(typeof(PhotonView))]
-    public class PictureManager : MonoBehaviour,ISetUp
+    public class PictureManager : MonoBehaviour, ISetUp
     {
         [SerializeField]
         private UIManagerMain uiManagerMain;//UIManagerMain
@@ -19,12 +21,12 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
-            //既に他のプレイヤーが画像を表示しているなら
-            if (PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"] is byte[] bytes)
-            {
-                //バイナリデータから画像を黒板に設置する
-                SetPictureFromBytes(bytes);
-            }
+            //画像を同期する
+            this.UpdateAsObservable()
+                .Where(_ => PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"] is byte[])
+                .ThrottleFirst(System.TimeSpan.FromSeconds(ConstData.PICTURE_SYNCHRONIZE_SPAN))
+                .Subscribe(_ => { SetPictureFromBytes((byte[])PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"]); })
+                .AddTo(this);
         }
 
         /// <summary>
@@ -32,6 +34,29 @@ namespace SchoolMetaverse
         /// </summary>
         public void SendPicture(string picturePath)
         {
+            //他のプレイヤーが画像を設定中なら
+            if (PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPicture"] is bool isSettingPicture && isSettingPicture)
+            {
+                //効果音を再生する
+                SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
+                //エラーを表示する
+                uiManagerMain.SetTxtSendPictureError("他のプレイヤーが画像を送信中です。");
+
+                //以降の処理を行わない
+                return;
+            }
+
+            //Hashtableを作成する
+            var hashtable = new ExitGames.Client.Photon.Hashtable
+            {
+                //ゲームサーバーに「画像設定中」という情報を持たせる
+                ["IsSettingPicture"] = true
+            };
+
+            //作成したカスタムプロパティを持たせる
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
             //イメージ（保持用）
             Image imgPicture;
 
@@ -41,7 +66,7 @@ namespace SchoolMetaverse
             //ファイルが見つからなかったら
             catch (FileNotFoundException)
             {
-                //効果音を表示する
+                //効果音を再生する
                 SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
 
                 //エラーを表示する
@@ -73,7 +98,7 @@ namespace SchoolMetaverse
             //テクスチャを作成できなかったら
             if (!texture.LoadImage(bytes))
             {
-                //効果音を表示する
+                //効果音を再生する
                 SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
 
                 //エラーを表示する
@@ -98,6 +123,16 @@ namespace SchoolMetaverse
 
             //黒板のスプライトを設定する
             uiManagerMain.SetImgBlackBordSprite(sprite, texture.width, texture.height);
+
+            //Hashtableを作成する
+            var hashtable1 = new ExitGames.Client.Photon.Hashtable
+            {
+                //ゲームサーバーに「画像設定中ではない」という情報を持たせる
+                ["IsSettingPicture"] = false
+            };
+
+            //作成したカスタムプロパティを持たせる
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable1);
         }
     }
 }
