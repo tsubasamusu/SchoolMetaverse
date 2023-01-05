@@ -10,7 +10,6 @@ namespace SchoolMetaverse
     /// <summary>
     /// ‰æ‘œ‚ÉŠÖ‚·‚éˆ—‚ğs‚¤
     /// </summary>
-    [RequireComponent(typeof(PhotonView))]
     public class PictureManager : MonoBehaviour, ISetUp
     {
         [SerializeField]
