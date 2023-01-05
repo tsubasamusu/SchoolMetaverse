@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Photon.Pun;
+using System.Collections;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -82,6 +83,8 @@ namespace SchoolMetaverse
         private RectTransform rtBlackBord;//黒板のRectTransform
 
         private float firstPictureSize;//画像のサイズの初期値
+
+        private bool isSettingPictureSize;//画像のサイズを調節中かどうか
 
         /// <summary>
         /// メッセージ入力用のインプットフィールド（取得用）
@@ -334,9 +337,6 @@ namespace SchoolMetaverse
                     //効果音を再生する
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
 
-                    //SingleAssignmentDisposableを作成する
-                    var disposable = new SingleAssignmentDisposable();
-
                     //画像送信画面が表示されているなら
                     if (cgSendPicture.alpha == 1f)
                     {
@@ -358,9 +358,6 @@ namespace SchoolMetaverse
                         //スライダーを非活性化する
                         sldPictureSize.interactable = false;
 
-                        //購読を停止する
-                        disposable?.Dispose();
-
                         //Hashtableを作成する
                         var hashtable = new ExitGames.Client.Photon.Hashtable
                         {
@@ -370,6 +367,9 @@ namespace SchoolMetaverse
 
                         //作成したカスタムプロパティを登録する
                         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+
+                        //画像のサイズを設定中ではない状態に切り替える
+                        isSettingPictureSize = false;
 
                         //以降の処理を行わない
                         return;
@@ -412,9 +412,11 @@ namespace SchoolMetaverse
                         //作成したカスタムプロパティを登録する
                         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
 
-                        //画像のサイズを変更する
-                        disposable.Disposable = this.UpdateAsObservable()
-                        .Subscribe(_ => UpdatePictureSize());
+                        //画像のサイズの設定中に切り替える
+                        isSettingPictureSize = true;
+
+                        //画像のサイズの更新を開始する
+                        StartCoroutine(StartUpdatePictureSize());
 
                         //パス入力欄を空にする
                         ifPicturePath.text = string.Empty;
@@ -535,28 +537,36 @@ namespace SchoolMetaverse
         }
 
         /// <summary>
-        /// 画像のサイズを更新する
+        /// 画像のサイズの更新を開始する
         /// </summary>
-        private void UpdatePictureSize()
+        /// <returns>待ち時間</returns>
+        private IEnumerator StartUpdatePictureSize()
         {
-            //プレイヤーから入力されたサイズを取得する
-            float size = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
-
-            //Hashtableを作成する
-            var hashtable = new ExitGames.Client.Photon.Hashtable
+            //画像のサイズを設定中なら繰り返す
+            while (isSettingPictureSize)
             {
-                //ゲームサーバーにスライダーの値を持たせる
-                ["SldPictureSizeValue"] = sldPictureSize.value,
+                //プレイヤーから入力されたサイズを取得する
+                float size = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
 
-                //ゲームサーバーに画像のサイズを持たせる
-                ["PictureSize"] = size
-            };
+                //Hashtableを作成する
+                var hashtable = new ExitGames.Client.Photon.Hashtable
+                {
+                    //ゲームサーバーにスライダーの値を持たせる
+                    ["SldPictureSizeValue"] = sldPictureSize.value,
 
-            //作成したカスタムプロパティを登録する
-            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+                    //ゲームサーバーに画像のサイズを持たせる
+                    ["PictureSize"] = size
+                };
 
-            //画像のサイズを設定する
-            rtBlackBord.localScale = new(size, size, size);
+                //作成したカスタムプロパティを登録する
+                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
+                //画像のサイズを設定する
+                rtBlackBord.localScale = new(size, size, size);
+
+                //1フレーム待つ
+                yield return null;
+            }
         }
 
         /// <summary>
@@ -617,10 +627,5 @@ namespace SchoolMetaverse
         /// </summary>
         /// <param name="isActive">活性化するかどうか</param>
         public void SetSldPictureSizeActive(bool isActive) { sldPictureSize.gameObject.SetActive(isActive); }
-
-        private void Update()
-        {
-            Debug.Log(PhotonNetwork.CurrentRoom.CustomProperties["PictureSize"]);
-        }
     }
 }
