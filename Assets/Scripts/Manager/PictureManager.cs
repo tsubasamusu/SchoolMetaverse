@@ -20,6 +20,7 @@ namespace SchoolMetaverse
         /// </summary>
         public void SetUp()
         {
+            Debug.Log(this);
             //画像を同期する
             this.UpdateAsObservable()
                 .Where(_ => PhotonNetwork.CurrentRoom.CustomProperties["PictureBites"] is byte[])
@@ -72,7 +73,17 @@ namespace SchoolMetaverse
                 uiManagerMain.SetSldPictureSizeActive(false);
 
                 //エラーを表示する
-                uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。");
+                uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。\n入力されたパス\n"+picturePath);
+
+                //Hashtableを作成する
+                var hashtable1 = new ExitGames.Client.Photon.Hashtable
+                {
+                    //ゲームサーバーに「画像設定中ではない」という情報を持たせる
+                    ["IsSettingPicture"] = false
+                };
+
+                //作成したカスタムプロパティを登録する
+                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable1);
 
                 //以降の処理を行わない
                 return;
@@ -108,6 +119,16 @@ namespace SchoolMetaverse
 
                 //エラーを表示する
                 uiManagerMain.SetTxtSendPictureError("画像のテクスチャを作成できませんでした。\n開発者に問い合わせてください。\nhttps://tsubasamusu.com");
+
+                //Hashtableを作成する
+                var hashtable2 = new ExitGames.Client.Photon.Hashtable
+                {
+                    //ゲームサーバーに「画像設定中ではない」という情報を持たせる
+                    ["IsSettingPicture"] = false
+                };
+
+                //作成したカスタムプロパティを登録する
+                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable2);
 
                 //以降の処理を行わない
                 return;

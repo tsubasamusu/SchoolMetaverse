@@ -121,6 +121,12 @@ namespace SchoolMetaverse
             //全てのボタンを表示する
             cgButton.alpha = 1f;
 
+            //設定画面のスライダーを非活性化する
+            sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
+
+            //各画面のボタンを非活性化する
+            btnSendMessage.interactable=btnPicturePath.interactable = false;
+
             //全てのスライダーと、メッセージのキャンバスグループを非表示にする
             cgSetting.alpha = cgMessage.alpha = 0f;
 
