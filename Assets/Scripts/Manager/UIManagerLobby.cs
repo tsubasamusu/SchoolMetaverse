@@ -1,10 +1,12 @@
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using System;
 using System.Collections;
+using System.Threading;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Photon.Pun;
-using System;
 
 namespace SchoolMetaverse
 {
@@ -26,6 +28,9 @@ namespace SchoolMetaverse
         private InputField inputField;//InputField
 
         [SerializeField]
+        private Image imgLoad;//ロード中のイメージ
+
+        [SerializeField]
         private PhotonController photonController;//PhotonController
 
         /// <summary>
@@ -38,6 +43,9 @@ namespace SchoolMetaverse
 
             //スペースホルダのテキストを設定する
             txtPlaceholder.text = "パスコードを入力...";
+
+            //ロード中のイメージを非表示にする
+            imgLoad.DOFade(0f, 0f);
 
             btnMain.OnClickAsObservable()
             .Subscribe(_ =>
@@ -130,11 +138,31 @@ namespace SchoolMetaverse
                 //マスターサーバーに繋ぐ
                 photonController.ConnectMasterServer();
 
+                //ロード中のアニメーションを行う
+                PlayLoadAnimation(this.GetCancellationTokenOnDestroy()).Forget();
+
                 //ルームに参加するまで待つ
                 yield return new WaitUntil(() => photonController.JoinedRoom);
 
                 //メインシーンを読み込む
                 SceneManager.LoadScene("Main");
+            }
+
+            //ロード中のアニメーションを行う
+            async UniTaskVoid PlayLoadAnimation(CancellationToken token)
+            {
+                //ロード中のイメージを表示する
+                imgLoad.DOFade(1f, 0f);
+
+                //無限に繰り返す
+                while(true)
+                {
+                    //回転する
+                    imgLoad.transform.Rotate(0f,0f,-365f/8f);
+
+                    //一定時間待つ
+                    await UniTask.Delay(TimeSpan.FromSeconds(ConstData.IMG_LOAD_ROT_SPAN), cancellationToken: token);
+                }
             }
         }
     }

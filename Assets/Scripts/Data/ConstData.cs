@@ -33,6 +33,8 @@ namespace SchoolMetaverse
 
         public const float PICTURE_SYNCHRONIZE_SPAN = 1f;//画像を同期する間隔
 
+        public const float IMG_LOAD_ROT_SPAN = 0.1f;//ロード中のイメージの回転間隔
+
         public const string PASSCODE = "0308";//パスコード
 
         public const KeyCode WALK_F_KEY = KeyCode.UpArrow;//前へ進むキー
