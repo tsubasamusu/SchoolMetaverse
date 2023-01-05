@@ -14,7 +14,8 @@ public class SoundDataSO : ScriptableObject
         無効なボタンを押した時の音,
         歩く時の足音,
         BGM,
-        送信ボタンを押した時の音
+        送信ボタンを押した時の音,
+        エラーを表示する時の音
     }
 
     /// <summary>   

@@ -41,6 +41,9 @@ namespace SchoolMetaverse
             //ファイルが見つからなかったら
             catch (FileNotFoundException)
             {
+                //効果音を表示する
+                SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
                 //エラーを表示する
                 uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。");
 
@@ -70,6 +73,9 @@ namespace SchoolMetaverse
             //テクスチャを作成できなかったら
             if (!texture.LoadImage(bytes))
             {
+                //効果音を表示する
+                SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
                 //エラーを表示する
                 uiManagerMain.SetTxtSendPictureError("画像のテクスチャを作成できませんでした。\n開発者に問い合わせてください。\nhttps://tsubasamusu.com");
 
