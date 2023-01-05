@@ -54,7 +54,7 @@ namespace SchoolMetaverse
                 ["IsSettingPicture"] = true
             };
 
-            //作成したカスタムプロパティを持たせる
+            //作成したカスタムプロパティを登録する
             PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
             //イメージ（保持用）
@@ -118,7 +118,7 @@ namespace SchoolMetaverse
                 ["PictureBites"] = bytes
             };
 
-            //作成したカスタムプロパティを持たせる
+            //作成したカスタムプロパティを登録する
             PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
             //黒板のスプライトを設定する
@@ -131,7 +131,7 @@ namespace SchoolMetaverse
                 ["IsSettingPicture"] = false
             };
 
-            //作成したカスタムプロパティを持たせる
+            //作成したカスタムプロパティを登録する
             PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable1);
         }
     }

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Photon.Pun;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -315,26 +316,60 @@ namespace SchoolMetaverse
                         //黒板に画像が表示されているなら
                         if (imgBlackBord.sprite != null)
                         {
-                            //スライダーのゲームオブジェクトを活性化する
-                            sldPictureSize.gameObject.SetActive(true);
-
-                            //スライダーを活性化する
-                            sldPictureSize.interactable = true;
-
-                            //画像のサイズの変更処理
-                            disposable.Disposable = this.UpdateAsObservable()
-                            .Subscribe(_ =>
+                            //他のプレイヤーが画像のサイズを設定でなければ
+                            if (PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPictureSize"] is bool isSettingPictureSize && !isSettingPictureSize)
                             {
-                                //入力されたサイズを取得する
-                                float scale = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
+                                //Hashtableを作成する
+                                var hashtable = new ExitGames.Client.Photon.Hashtable
+                                {
+                                    //ゲームサーバーに「画像のサイズを設定中」という情報を持たせる
+                                    ["IsSettingPictureSize"] = true
+                                };
 
-                                //黒板のサイズを変更する
-                                rtBlackBord.localScale = new Vector3(scale, scale, scale);
-                            });
+                                //作成したカスタムプロパティを登録する
+                                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
+                                //スライダーのゲームオブジェクトを活性化する
+                                sldPictureSize.gameObject.SetActive(true);
+
+                                //スライダーを活性化する
+                                sldPictureSize.interactable = true;
+
+                                //画像のサイズの変更処理
+                                disposable.Disposable = this.UpdateAsObservable()
+                                .Subscribe(_ =>
+                                {
+                                    //入力されたサイズを取得する
+                                    float scale = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
+
+                                    //Hashtableを作成する
+                                    var hashtable = new ExitGames.Client.Photon.Hashtable
+                                    {
+                                        //ゲームサーバーに画像のサイズを持たせる
+                                        ["PictureSize"] = scale
+                                    };
+
+                                    //作成したカスタムプロパティを登録する
+                                    PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
+                                    //画像のサイズを設定する
+                                    rtBlackBord.localScale = new(scale, scale, scale);
+                                });
+
+
+                                //パス入力欄を空にする
+                                ifPicturePath.text = string.Empty;
+                            }
+                            //他のプレイヤーが画像のサイズの変更中なら
+                            else
+                            {
+                                //効果音を再生する
+                                SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
+                                //エラーを表示する
+                                SetTxtSendPictureError("他のプレイヤーが画像のサイズを変更中です。");
+                            }
                         }
-
-                        //パス入力欄を空にする
-                        ifPicturePath.text = string.Empty;
                     }
                     //画像送信画面が表示されているなら
                     else
@@ -357,8 +392,18 @@ namespace SchoolMetaverse
                             //スライダーを非活性化する
                             sldPictureSize.interactable = false;
 
+                            //Hashtableを作成する
+                            var hashtable = new ExitGames.Client.Photon.Hashtable
+                            {
+                                //ゲームサーバーに「画像のサイズを設定中ではない」という情報を持たせる
+                                ["IsSettingPictureSize"] = false
+                            };
+
+                            //作成したカスタムプロパティを登録する
+                            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
                             //購読を停止する
-                            disposable.Dispose();
+                            disposable?.Dispose();
                         }
                     }
                 })
@@ -457,6 +502,16 @@ namespace SchoolMetaverse
 
             //入力されたサイズを取得する
             float scale = ConstData.PICTURE_SIZE_RATIO * sldPictureSize.value;
+
+            //Hashtableを作成する
+            var hashtable = new ExitGames.Client.Photon.Hashtable
+            {
+                //ゲームサーバーに画像のサイズを持たせる
+                ["PictureSize"] = scale
+            };
+
+            //作成したカスタムプロパティを登録する
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
             //大きさを初期値に設定する
             rtBlackBord.localScale = new(scale, scale, scale);
