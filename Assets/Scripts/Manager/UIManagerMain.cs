@@ -116,14 +116,27 @@ namespace SchoolMetaverse
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
                 .Subscribe(_ =>
                 {
-                    //他の画面が表示されているなら
-                    if (cgSetting.alpha != 0f || cgSendPicture.alpha != 0f)
+                    //設定画面が表示されているなら
+                    if (cgSetting.alpha != 0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
 
                         //ボタンのアニメーションを行う
-                        PlayButtonAnimation(btnMessage);
+                        PlayButtonAnimation(btnSetting);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //画像送信画面が表示されているなら
+                    if (cgSendPicture.alpha != 0f)
+                    {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                        //ボタンのアニメーションを行う
+                        PlayButtonAnimation(btnSendPicture);
 
                         //以降の処理を行わない
                         return;
@@ -167,14 +180,27 @@ namespace SchoolMetaverse
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
                 .Subscribe(_ =>
                 {
-                    //他の画面が表示されているなら
-                    if (cgMessage.alpha != 0f || cgSendPicture.alpha != 0f)
+                    //メッセージ画面が表示されているなら
+                    if (cgMessage.alpha != 0f )
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
 
                         //ボタンのアニメーションを行う
-                        PlayButtonAnimation(btnSetting);
+                        PlayButtonAnimation(btnMessage);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //画像送信画面が表示されているなら
+                    if (cgSendPicture.alpha != 0f)
+                    {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                        //ボタンのアニメーションを行う
+                        PlayButtonAnimation(btnSendPicture);
 
                         //以降の処理を行わない
                         return;
@@ -236,14 +262,27 @@ namespace SchoolMetaverse
                 .ThrottleFirst(System.TimeSpan.FromSeconds(1f))
                 .Subscribe(_ =>
                 {
-                    //他の画面が表示されているなら
-                    if (cgMessage.alpha != 0f || cgSetting.alpha != 0f)
+                    //メッセージ画面が表示されているなら
+                    if (cgMessage.alpha != 0f)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
 
                         //ボタンのアニメーションを行う
-                        PlayButtonAnimation(btnSendPicture);
+                        PlayButtonAnimation(btnMessage);
+
+                        //以降の処理を行わない
+                        return;
+                    }
+
+                    //設定画面が表示されているなら
+                    if (cgSetting.alpha != 0f)
+                    {
+                        //効果音を再生する
+                        SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
+
+                        //ボタンのアニメーションを行う
+                        PlayButtonAnimation(btnSetting);
 
                         //以降の処理を行わない
                         return;
