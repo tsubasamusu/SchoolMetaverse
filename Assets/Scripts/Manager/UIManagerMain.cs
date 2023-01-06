@@ -38,7 +38,7 @@ namespace SchoolMetaverse
         private Button btnSendMessage;//メッセージ送信ボタン
 
         [SerializeField]
-        private Button btnPicturePath;//画像のパスの入力完了ボタン
+        private Button btnPictureURL;//画像のURLの入力完了ボタン
 
         [SerializeField]
         private Slider sldBgmVolume;//BGMの音量のスライダー
@@ -59,7 +59,7 @@ namespace SchoolMetaverse
         private InputField ifMessage;//メッセージ入力用のインプットフィールド
 
         [SerializeField]
-        private InputField ifPicturePath;//画像のパス入力用のインプットフィールド
+        private InputField ifPictureURL;//画像のURL入力用のインプットフィールド
 
         [SerializeField]
         private CanvasGroup cgButton;//ボタンのキャンバスグループ
@@ -104,7 +104,7 @@ namespace SchoolMetaverse
             StartControlBtnSetting();
             StartControlBtnSendPicture();
             StartControlBtnSendMessage();
-            StartControlBtnPicturePath();
+            StartControlBtnPictureURL();
 
             //通知のイメージの制御を開始する
             StartControlImgNotice();
@@ -131,7 +131,7 @@ namespace SchoolMetaverse
             sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
 
             //各画面のボタンを非活性化する
-            btnSendMessage.interactable=btnPicturePath.interactable = false;
+            btnSendMessage.interactable = btnPictureURL.interactable = false;
 
             //全てのスライダーと、メッセージのキャンバスグループを非表示にする
             cgSetting.alpha = cgMessage.alpha = 0f;
@@ -361,8 +361,8 @@ namespace SchoolMetaverse
                         //サブの背景を非活性化する
                         imgSubBackground.gameObject.SetActive(false);
 
-                        //InputFieldと画像送信ボタンを非活性化する
-                        ifPicturePath.interactable = btnPicturePath.interactable = false;
+                        //InputFieldと画像のURLの入力完了ボタンを非活性化する
+                        ifPictureURL.interactable = btnPictureURL.interactable = false;
 
                         //黒板に画像が表示されていないなら、以降の処理を行わない
                         if (imgBlackBord.sprite == null) return;
@@ -396,8 +396,8 @@ namespace SchoolMetaverse
                     //サブの背景を活性化する
                     imgSubBackground.gameObject.SetActive(true);
 
-                    //InputFieldと画像送信ボタンを活性化する
-                    ifPicturePath.interactable = btnPicturePath.interactable = true;
+                    //InputFieldと画像のURLの入力完了ボタンを活性化する
+                    ifPictureURL.interactable = btnPictureURL.interactable = true;
 
                     //エラー表示を空にする
                     txtSendPictureError.text = string.Empty;
@@ -434,7 +434,7 @@ namespace SchoolMetaverse
                         StartCoroutine(StartUpdatePictureSize());
 
                         //パス入力欄を空にする
-                        ifPicturePath.text = string.Empty;
+                        ifPictureURL.text = string.Empty;
 
                         //以降の処理を行わない
                         return;
@@ -478,16 +478,16 @@ namespace SchoolMetaverse
         }
 
         /// <summary>
-        /// 画像のパスの入力完了ボタンの制御を開始する
+        /// 画像のURLの入力完了ボタンの制御を開始する
         /// </summary>
-        private void StartControlBtnPicturePath()
+        private void StartControlBtnPictureURL()
         {
-            //画像のパスの入力完了ボタンを押された際の処理
-            btnPicturePath.OnClickAsObservable()
+            //画像のURLの入力完了ボタンを押された際の処理
+            btnPictureURL.OnClickAsObservable()
                 .Subscribe(_ =>
                 {
-                    //画像のパスが入力されていないなら
-                    if (ifPicturePath.text == string.Empty)
+                    //画像のURLが入力されていないなら
+                    if (ifPictureURL.text == string.Empty)
                     {
                         //効果音を再生する
                         SoundManager.instance.PlaySound(SoundDataSO.SoundName.無効なボタンを押した時の音);
@@ -500,10 +500,10 @@ namespace SchoolMetaverse
                     SoundManager.instance.PlaySound(SoundDataSO.SoundName.送信ボタンを押した時の音);
 
                     //画像を送信する
-                    pictureManager.SendPicture(ifPicturePath.text);
+                    pictureManager.SendPicture(ifPictureURL.text);
 
                     //プレイヤーが入力したテキストを空にする
-                    ifPicturePath.text = string.Empty;
+                    ifPictureURL.text = string.Empty;
 
                     //エラーが表示されているなら、以降の処理を行わない
                     if (txtSendPictureError.text != string.Empty) return;
@@ -514,8 +514,8 @@ namespace SchoolMetaverse
                     //サブの背景を非活性化する
                     imgSubBackground.gameObject.SetActive(false);
 
-                    //InputFieldと画像送信ボタンを非活性化する
-                    ifPicturePath.interactable = btnPicturePath.interactable = false;
+                    //InputFieldと画像のURLの入力完了ボタンを非活性化する
+                    ifPictureURL.interactable = btnPictureURL.interactable = false;
 
                     //スライダーのゲームオブジェクトを非活性化する
                     SetSldPictureSizeActive(false);
