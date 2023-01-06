@@ -64,6 +64,9 @@ namespace SchoolMetaverse
         /// <param name="newPlayer">参加したプレイヤー</param>
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
+            //自分がマスタークライアントではないなら、以降の処理を行わない
+            if (!PhotonNetwork.LocalPlayer.IsMasterClient) return;
+
             //ボットからメッセージを送信する
             SendMessageFromBotAsync(this.GetCancellationTokenOnDestroy(), newPlayer, "さんが参加しました。").Forget();
         }
@@ -74,6 +77,9 @@ namespace SchoolMetaverse
         /// <param name="otherPlayer">離れたプレイヤー</param>
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            //自分がマスタークライアントではないなら、以降の処理を行わない
+            if (!PhotonNetwork.LocalPlayer.IsMasterClient) return;
+
             //ボットからメッセージを送信する
             SendMessageFromBotAsync(this.GetCancellationTokenOnDestroy(), otherPlayer, "さんが退出しました。").Forget();
         }
