@@ -1,4 +1,3 @@
-using Photon.Voice.Unity;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -6,12 +5,8 @@ namespace SchoolMetaverse
     /// <summary>  
     /// 音の処理を行う
     /// </summary>  
-    [RequireComponent(typeof(Recorder))]
     public class SoundManager : MonoBehaviour
     {
-        [SerializeField]
-        private Recorder recorder;//レコーダー
-
         [SerializeField]
         private SoundDataSO soundDataSO;//SoundDataSO
 
@@ -104,11 +99,5 @@ namespace SchoolMetaverse
         /// BGmの音量を更新する
         /// </summary>
         public void UpdateBgmVolume() { audBgmPlayer.volume = GameData.instance.bgmVolume; }
-
-        /// <summary>
-        /// レコーダーを活性化・非活性化する
-        /// </summary>
-        /// <param name="isactive">レコーダーを活性化するかどうか</param>
-        public void SetRecorderActive(bool isactive) { recorder.RecordingEnabled = !isactive; }
     }
 }
