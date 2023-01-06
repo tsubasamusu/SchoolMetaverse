@@ -626,50 +626,47 @@ namespace SchoolMetaverse
         /// </summary>
         private void StartControlImgNotice()
         {
-            //メッセージの送信回数の確認回数
-            int checkedCount = 0;
-
             //送信回数（記憶用）
-            int sendMessageCount = 0;
+            int latestCount = 0;
+            int newCount = 0;
 
             //通知の制御処理
             this.UpdateAsObservable()
                 .ThrottleFirst(System.TimeSpan.FromSeconds(ConstData.CHECK_MESSAGES_SPAN))
-                .Subscribe(_ => 
+                .Subscribe(_ =>
                 {
-                    //ゲームサーバーにメッセージの送信回数の情報があるなら
-                    if (PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"] is int sendPictureCount)
-                    {
-                        //通知が表示されているなら、以降の処理を行わない
-                        if (imgNotice.gameObject.activeSelf) return;
+                    //ゲームサーバーにメッセージの送信回数の情報がないなら、以降の処理を行わない
+                    if (PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"] is not int) return;
 
-                        //メッセージの送信回数が増えていないなら、以降の処理を行わない
-                        if (!IncreasedSendMessageCount()) return;
+                    //メッセージの送信回数が増えていないなら、以降の処理を行わない
+                    if (!IncreasedSendMessageCount()) return;
 
-                        //メッセージ画面が表示されていないなら、通知を表示する
-                        if (cgMessage.alpha == 0f)imgNotice.gameObject.SetActive(true);
-                    }
+                    //メッセージ画面が表示されていないなら、通知を表示する
+                    if (cgMessage.alpha == 0f) imgNotice.gameObject.SetActive(true);
                 })
                 .AddTo(this);
 
             //メッセージの送信回数が増えたかどうか
             bool IncreasedSendMessageCount()
             {
-                //メッセージの送信回数の確認回数をカウントする
-                checkedCount++;
+                //ゲームサーバーに保存されている、メッセージの送信回数を取得する
+                newCount = (int)PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"];
 
-                //メッセージを確認した回数が偶数なら
-                if (checkedCount % 2 == 0)
+                //送信回数が増えているなら
+                if (newCount > latestCount)
                 {
                     //ゲームサーバーに保存されている、メッセージの送信回数を取得する
-                    sendMessageCount = (int)PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"];
+                    latestCount = newCount;
 
-                    //以降の処理を行わない
-                    return false;
+                    //trueを返す
+                    return true;
                 }
 
-                //結果を返す
-                return sendMessageCount< (int)PhotonNetwork.CurrentRoom.CustomProperties["SendMessageCount"];
+                //ゲームサーバーに保存されている、メッセージの送信回数を取得する
+                latestCount = newCount;
+
+                //falseを返す
+                return false;
             }
         }
 
