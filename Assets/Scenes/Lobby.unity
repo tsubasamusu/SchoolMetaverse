@@ -1550,6 +1550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b373c9999b73c4449879b991ad12b16d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  recorder: {fileID: 1759740637}
   soundDataSO: {fileID: 11400000, guid: 566b2f1ed1c1ef4418941189ce08b1ff, type: 2}
 --- !u!4 &1759740635
 Transform:

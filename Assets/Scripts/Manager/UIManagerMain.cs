@@ -26,6 +26,9 @@ namespace SchoolMetaverse
         private Image imgNotice;//通知のイメージ
 
         [SerializeField]
+        private Image imgMute;//ミュートのイメージ
+
+        [SerializeField]
         private Button btnSendPicture;//画像送信ボタン
 
         [SerializeField]
@@ -57,6 +60,9 @@ namespace SchoolMetaverse
 
         [SerializeField]
         private Text txtSendPictureError;//画像送信画面のエラー表示用のテキスト
+
+        [SerializeField]
+        private Text txtMute;//ミュートのテキスト
 
         [SerializeField]
         private InputField ifMessage;//メッセージ入力用のインプットフィールド
@@ -106,6 +112,7 @@ namespace SchoolMetaverse
             StartControlBtnMessage();
             StartControlBtnSetting();
             StartControlBtnSendPicture();
+            StartControlBtnMute();
             StartControlBtnSendMessage();
             StartControlBtnPicturePath();
 
@@ -129,6 +136,12 @@ namespace SchoolMetaverse
 
             //通知を非活性化する
             imgNotice.gameObject.SetActive(false);
+
+            //ミュートのイメージを非活性化する
+            imgMute.gameObject.SetActive(false);
+
+            //ミュートのテキストを設定する
+            txtMute.text = "ミュートする";
 
             //設定画面のスライダーを非活性化する
             sldBgmVolume.interactable = sldLookSensitivity.interactable = false;
@@ -448,6 +461,27 @@ namespace SchoolMetaverse
 
                     //エラーを表示する
                     SetTxtSendPictureError("他のプレイヤーが画像のサイズを変更中です。");
+                })
+                .AddTo(this);
+        }
+
+        /// <summary>
+        /// ミュートのボタン制御を開始する
+        /// </summary>
+        private void StartControlBtnMute()
+        {
+            //ミュートボタンが押された際の処理
+            btnMute.OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    //ミュートのイメージの活性化・非活性化を切り替える
+                    imgMute.gameObject.SetActive(!imgMute.gameObject.activeSelf);
+
+                    //レコーダーの活性化・非活性化を切り替える
+                    SoundManager.instance.SetRecorderActive(imgMute.gameObject.activeSelf);
+
+                    //ミュートのテキストを設定する
+                    txtMute.text = imgMute.gameObject.activeSelf ? "ミュートを解除する" : "ミュートする";
                 })
                 .AddTo(this);
         }
