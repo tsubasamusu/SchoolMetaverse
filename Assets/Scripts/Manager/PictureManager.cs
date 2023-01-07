@@ -2,8 +2,10 @@ using Photon.Pun;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using UniRx;
 using UniRx.Triggers;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SchoolMetaverse
@@ -33,7 +35,8 @@ namespace SchoolMetaverse
         /// <summary>
         /// 画像を送信する
         /// </summary>
-        public void SendPicture(string picturePath)
+        /// <param name="pictureURL">画像のURL</param>
+        public void SendPicture(string pictureURL)
         {
             //他のプレイヤーが画像を設定中なら
             if (PhotonNetwork.CurrentRoom.CustomProperties["IsSettingPicture"] is bool isSettingPicture && isSettingPicture)
@@ -59,36 +62,10 @@ namespace SchoolMetaverse
             PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
 
             //イメージ（保持用）
-            Image imgPicture;
+            Image imgPicture = GetImageFromURL(pictureURL);
 
-            //イメージを取得する
-            try { imgPicture = Image.FromFile(picturePath); }
-
-            //ファイルが見つからなかったら
-            catch (FileNotFoundException)
-            {
-                //効果音を再生する
-                SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
-
-                //画像のサイズ調節用のスライダーを非活性化する
-                uiManagerMain.SetSldPictureSizeActive(false);
-
-                //エラーを表示する
-                uiManagerMain.SetTxtSendPictureError("正しい画像のパスを入力してください。\n入力されたパス\n" + picturePath);
-
-                //Hashtableを作成する
-                var hashtable1 = new ExitGames.Client.Photon.Hashtable
-                {
-                    //ゲームサーバーに「画像設定中ではない」という情報を持たせる
-                    ["IsSettingPicture"] = false
-                };
-
-                //作成したカスタムプロパティを登録する
-                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable1);
-
-                //以降の処理を行わない
-                return;
-            }
+            //イメージを取得できなかったら、以降の処理を行わない
+            if (imgPicture == null) return;
 
             //取得した画像のサイズが大きいなら
             if (imgPicture.Width >= ConstData.MAX_PICTURE_SIZE || imgPicture.Height >= ConstData.MAX_PICTURE_SIZE)
@@ -108,6 +85,59 @@ namespace SchoolMetaverse
 
             //バイナリデータから画像を黒板に設置する
             SetPictureFromBytes(bytes);
+        }
+
+        /// <summary> 
+        /// URLからイメージを取得する 
+        /// </summary> 
+        /// <param name="pictureURL">画像のURL</param> 
+        /// <returns>イメージ</returns> 
+        private Image GetImageFromURL(string pictureURL)
+        {
+            //WebClientを作成する 
+            WebClient webClient = new();
+
+            //Streamを作成する
+            Stream stream = null;
+
+            //URLからStreamを取得する 
+            try { stream = webClient.OpenRead(pictureURL); }
+
+            //URLからStreamを取得できても、できなくても
+            finally
+            {
+                //Streamを取得できなかったら（無効なURLを入力されたら）
+                if (stream == null)
+                {
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.エラーを表示する時の音);
+
+                    //画像のサイズ調節用のスライダーを非活性化する
+                    uiManagerMain.SetSldPictureSizeActive(false);
+
+                    //エラーを表示する
+                    uiManagerMain.SetTxtSendPictureError("正しい画像のURLを入力してください。");
+
+                    //Hashtableを作成する
+                    var hashtable1 = new ExitGames.Client.Photon.Hashtable
+                    {
+                        //ゲームサーバーに「画像設定中ではない」という情報を持たせる
+                        ["IsSettingPicture"] = false
+                    };
+
+                    //作成したカスタムプロパティを登録する
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable1);
+                }
+            }
+
+            //Bitmapを作成する 
+            Bitmap bitmap = new(stream);
+
+            //作成したStreamを破棄する 
+            stream.Close();
+
+            //作成したBitmapを返す 
+            return bitmap;
         }
 
         /// <summary>
@@ -173,4 +203,3 @@ namespace SchoolMetaverse
         }
     }
 }
-
