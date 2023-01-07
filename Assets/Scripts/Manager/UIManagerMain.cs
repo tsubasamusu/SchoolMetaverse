@@ -474,6 +474,9 @@ namespace SchoolMetaverse
             btnMute.OnClickAsObservable()
                 .Subscribe(_ =>
                 {
+                    //効果音を再生する
+                    SoundManager.instance.PlaySound(SoundDataSO.SoundName.ボタンを押した時の音);
+
                     //ミュートのイメージの活性化・非活性化を切り替える
                     imgMute.gameObject.SetActive(!imgMute.gameObject.activeSelf);
 
