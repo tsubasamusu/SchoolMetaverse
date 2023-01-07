@@ -4686,27 +4686,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imgMainBackground: {fileID: 2056206248}
   imgSubBackground: {fileID: 103357338}
-  imgBlackBord: {fileID: 0}
   imgNotice: {fileID: 1491453767}
-  btnSendPicture: {fileID: 0}
   btnMessage: {fileID: 1877726864}
   btnSetting: {fileID: 1976402439}
   btnSendMessage: {fileID: 398619183}
-  btnPictureURL: {fileID: 0}
   sldBgmVolume: {fileID: 1361284213}
   sldLookSensitivity: {fileID: 235635816}
-  sldPictureSize: {fileID: 0}
   txtMessage: {fileID: 1745440393}
-  txtSendPictureError: {fileID: 0}
   ifMessage: {fileID: 646028943}
-  ifPictureURL: {fileID: 0}
   cgButton: {fileID: 199612180}
   cgSetting: {fileID: 1306764928}
   cgMessage: {fileID: 463675573}
-  cgSendPicture: {fileID: 0}
   messageManager: {fileID: 633243862}
-  pictureManager: {fileID: 1332576727}
-  rtBlackBord: {fileID: 0}
 --- !u!1 &883036421
 GameObject:
   m_ObjectHideFlags: 0
@@ -9488,10 +9479,6 @@ MonoBehaviour:
       rid: -2
   - mode: 0
     unityReference: {fileID: 854384158}
-    rawReference:
-      rid: -2
-  - mode: 0
-    unityReference: {fileID: 1332576727}
     rawReference:
       rid: -2
   references:
